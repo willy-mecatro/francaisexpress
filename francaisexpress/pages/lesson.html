@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Au Marché — FrançaisExpress</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --blue:#1a3f6f;--blue-mid:#2563eb;--blue-light:#dbeafe;--blue-bright:#60a5fa;
+  --red:#dc2626;--red-light:#fee2e2;--green:#16a34a;--green-light:#dcfce7;
+  --gold:#f59e0b;--gold-light:#fef3c7;--white:#fff;--off:#f8fafc;
+  --gray:#64748b;--dark:#0f172a;--border:rgba(0,0,0,0.07);--radius:14px;
+  --sidebar:260px;
+}
+body{font-family:'Inter',sans-serif;background:var(--off);color:var(--dark);display:flex;min-height:100vh}
+.syne{font-family:'Plus Jakarta Sans',sans-serif}
+
+/* ── SIDEBAR (même que dashboard) ── */
+.sidebar{width:var(--sidebar);background:var(--dark);position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;z-index:100;overflow:hidden}
+.sb-logo{padding:20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.07)}
+.sb-logo-icon{width:32px;height:32px;background:linear-gradient(135deg,#2563eb,#1a3f6f);border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:15px}
+.sb-logo-text{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;color:white}
+.sb-logo-text span{color:#60a5fa}
+.sb-back{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.07)}
+.sb-back-btn{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.5);font-size:13px;font-weight:500;cursor:pointer;padding:8px 10px;border-radius:8px;transition:all 0.2s;background:none;border:none;width:100%;text-align:left}
+.sb-back-btn:hover{background:rgba(255,255,255,0.06);color:white}
+.sb-lesson-info{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.07)}
+.sb-lesson-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:13px;color:white;margin-bottom:4px}
+.sb-lesson-sub{font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:10px}
+.sb-progress-bar{height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden}
+.sb-progress-fill{height:100%;background:linear-gradient(90deg,#2563eb,#60a5fa);border-radius:2px;transition:width 0.5s ease}
+.sb-progress-pct{font-size:11px;color:rgba(255,255,255,0.4);margin-top:5px;text-align:right}
+
+/* Steps nav */
+.steps-nav{flex:1;overflow-y:auto;padding:12px}
+.step-section{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);padding:10px 10px 4px}
+.step-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;margin:1px 0;cursor:pointer;transition:all 0.2s;color:rgba(255,255,255,0.45);font-size:13px;font-weight:500}
+.step-item:hover{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.8)}
+.step-item.active{background:rgba(37,99,235,0.25);color:white}
+.step-item.done{color:rgba(255,255,255,0.6)}
+.step-item.locked{opacity:0.3;cursor:not-allowed}
+.step-dot{width:22px;height:22px;border-radius:50%;border:1.5px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;transition:all 0.2s}
+.step-item.done .step-dot{background:var(--green);border-color:var(--green);color:white}
+.step-item.active .step-dot{background:var(--blue-mid);border-color:var(--blue-mid);color:white}
+
+/* XP footer */
+.sb-footer{padding:14px 16px;border-top:1px solid rgba(255,255,255,0.07)}
+.xp-reward-badge{background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.25);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:8px}
+.xp-reward-badge span{color:var(--gold);font-weight:700;font-size:14px}
+.xp-reward-badge small{color:rgba(255,255,255,0.45);font-size:11px;display:block}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh;min-width:0}
+
+/* Top bar */
+.topbar{background:white;border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;height:60px;gap:16px;position:sticky;top:0;z-index:50}
+.lesson-title-bar{flex:1}
+.lesson-name-top{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;color:var(--dark)}
+.lesson-sub-top{font-size:12px;color:var(--gray);margin-top:1px}
+.progress-bar-top{height:4px;background:#f1f5f9;border-radius:2px;overflow:hidden;margin-top:6px;width:100%}
+.progress-fill-top{height:100%;background:linear-gradient(90deg,var(--blue-mid),var(--blue-bright));border-radius:2px;transition:width 0.5s ease}
+.xp-badge{background:var(--gold-light);color:#92400e;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700;white-space:nowrap}
+
+/* Content */
+.lesson-content{flex:1;padding:36px 40px;max-width:800px;width:100%;margin:0 auto}
+.step-content{display:none;animation:fadeUp 0.3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* Step header */
+.step-header{margin-bottom:28px}
+.step-tag{display:inline-flex;align-items:center;gap:6px;background:var(--blue-light);color:var(--blue-mid);padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;margin-bottom:14px;text-transform:uppercase;letter-spacing:0.5px}
+.step-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;color:var(--dark);margin-bottom:8px}
+.step-desc{font-size:15px;color:var(--gray);line-height:1.6}
+
+/* VOCAB */
+.vocab-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px}
+.vocab-card{background:white;border-radius:var(--radius);border:1.5px solid var(--border);padding:20px 16px;text-align:center;cursor:pointer;transition:all 0.25s;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.vocab-card:hover{border-color:var(--blue-mid);transform:translateY(-2px);box-shadow:0 6px 20px rgba(37,99,235,0.1)}
+.vocab-card.flipped{background:var(--blue-mid);border-color:var(--blue-mid)}
+.vocab-emoji{font-size:32px;display:block;margin-bottom:10px}
+.vocab-fr{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:700;color:var(--dark);margin-bottom:4px}
+.vocab-card.flipped .vocab-fr{color:white}
+.vocab-pt{font-size:13px;color:var(--gray);display:none}
+.vocab-card.flipped .vocab-pt{display:block;color:rgba(255,255,255,0.85)}
+.vocab-audio{position:absolute;top:8px;right:8px;background:var(--blue-light);border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;color:var(--blue-mid);transition:all 0.2s}
+.vocab-audio:hover{background:var(--blue-mid);color:white}
+.vocab-card.flipped .vocab-audio{background:rgba(255,255,255,0.2);color:white}
+
+/* DIALOGUE */
+.dialogue-box{background:white;border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;margin-bottom:24px;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.dialogue-header{background:linear-gradient(135deg,var(--blue),var(--blue-mid));padding:14px 20px;display:flex;align-items:center;gap:12px}
+.dialogue-avatar{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:16px}
+.dialogue-info{color:white}
+.dialogue-info strong{font-size:14px;font-weight:700;display:block}
+.dialogue-info span{font-size:11px;opacity:0.7}
+.dialogue-body{padding:20px;display:flex;flex-direction:column;gap:12px}
+.dline{display:flex;gap:10px;align-items:flex-start}
+.dline.right{flex-direction:row-reverse}
+.dav{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:white}
+.dav.seller{background:var(--blue-mid)}
+.dav.buyer{background:var(--green)}
+.dbubble{background:var(--off);border-radius:12px;border-bottom-left-radius:2px;padding:11px 14px;max-width:80%;border:1px solid var(--border)}
+.dline.right .dbubble{background:var(--blue-light);border-bottom-left-radius:12px;border-bottom-right-radius:2px;border-color:rgba(37,99,235,0.15)}
+.dfr{font-size:14px;color:var(--dark);line-height:1.5;font-weight:500}
+.dpt{font-size:12px;color:var(--gray);margin-top:3px;font-style:italic}
+.daudio{background:none;border:none;color:var(--blue-mid);cursor:pointer;font-size:12px;margin-top:4px;padding:0;font-weight:600}
+
+/* GRAMMAR */
+.grammar-rule{background:white;border-radius:var(--radius);border:1px solid var(--border);padding:22px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.grammar-rule-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;margin-bottom:12px;display:flex;align-items:center;gap:8px;color:var(--dark)}
+.rule-badge{background:var(--blue-light);color:var(--blue-mid);font-size:11px;padding:3px 8px;border-radius:6px;font-weight:700}
+.grammar-ex{background:var(--off);border-radius:10px;padding:12px 16px;margin-top:10px;border-left:3px solid var(--blue-mid)}
+.ex-fr{font-size:15px;color:var(--dark);font-weight:500;margin-bottom:3px}
+.ex-pt{font-size:13px;color:var(--gray);font-style:italic}
+.highlight{color:var(--blue-mid);font-weight:700}
+
+/* EXERCISES */
+.exercise-card{background:white;border-radius:var(--radius);border:1.5px solid var(--border);padding:24px;margin-bottom:16px;transition:border-color 0.3s;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.exercise-card.correct{border-color:var(--green)}
+.exercise-card.wrong{border-color:var(--red)}
+.ex-type{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--gray);margin-bottom:8px}
+.ex-question{font-size:17px;color:var(--dark);font-weight:600;margin-bottom:18px;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:8px}
+.option-btn{padding:13px 16px;border-radius:10px;border:1.5px solid var(--border);background:white;text-align:left;font-size:14px;cursor:pointer;transition:all 0.2s;color:var(--dark);font-weight:500;font-family:'Inter',sans-serif}
+.option-btn:hover:not(:disabled){border-color:var(--blue-mid);background:var(--blue-light);color:var(--blue-mid)}
+.option-btn.selected-correct{background:var(--green-light);border-color:var(--green);color:#166534}
+.option-btn.selected-wrong{background:var(--red-light);border-color:var(--red);color:#991b1b}
+.option-btn.show-correct{background:var(--green-light);border-color:var(--green);color:#166534}
+.feedback{padding:11px 14px;border-radius:10px;font-size:13px;margin-top:12px;display:none}
+.feedback.show{display:block}
+.feedback.correct{background:var(--green-light);color:#166534;border-left:3px solid var(--green)}
+.feedback.wrong{background:var(--red-light);color:#991b1b;border-left:3px solid var(--red)}
+
+/* FILL BLANK */
+.fill-blank{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:17px;margin-bottom:18px;line-height:2}
+.blank-input{border:none;border-bottom:2px solid var(--blue-mid);background:transparent;font-size:17px;width:120px;text-align:center;color:var(--blue-mid);outline:none;font-family:'Inter',sans-serif;font-weight:600}
+.blank-input.correct-input{border-color:var(--green);color:var(--green)}
+.blank-input.wrong-input{border-color:var(--red);color:var(--red)}
+
+/* DRAG DROP */
+.words-bank{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;min-height:48px;padding:12px;border:1.5px dashed var(--border);border-radius:10px;background:white}
+.word-chip{padding:7px 14px;background:var(--blue-light);border-radius:20px;font-size:14px;font-weight:600;color:var(--blue-mid);cursor:grab;transition:all 0.2s;user-select:none}
+.word-chip:hover{background:var(--blue-mid);color:white}
+.word-chip.used{opacity:0.3;cursor:not-allowed}
+.sentence-target{display:flex;flex-wrap:wrap;gap:8px;min-height:48px;padding:12px;border:1.5px solid var(--border);border-radius:10px;background:var(--off);align-items:center}
+.placed-word{padding:7px 14px;background:var(--blue-mid);border-radius:20px;font-size:14px;font-weight:600;color:white;cursor:pointer;transition:all 0.2s}
+.placed-word:hover{background:var(--red)}
+
+/* NAV BUTTONS */
+.nav-buttons{display:flex;gap:12px;margin-top:28px;padding-top:22px;border-top:1px solid var(--border)}
+.nav-prev{padding:11px 22px;border-radius:10px;border:1.5px solid var(--border);background:white;font-size:14px;font-weight:600;cursor:pointer;color:var(--dark);transition:all 0.2s;font-family:'Inter',sans-serif}
+.nav-prev:hover{border-color:var(--blue-mid);color:var(--blue-mid)}
+.nav-next{flex:1;padding:11px 22px;border-radius:10px;border:none;background:var(--blue-mid);font-size:14px;font-weight:600;cursor:pointer;color:white;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Inter',sans-serif}
+.nav-next:hover{background:var(--blue);transform:translateY(-1px)}
+.nav-next:disabled{background:#cbd5e1;cursor:not-allowed;transform:none}
+
+/* COMPLETION MODAL */
+.completion-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:300;align-items:center;justify-content:center;padding:24px}
+.completion-overlay.open{display:flex}
+.completion-box{background:white;border-radius:24px;padding:44px 36px;text-align:center;max-width:420px;width:100%;animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes popIn{from{opacity:0;transform:scale(0.7)}to{opacity:1;transform:scale(1)}}
+.completion-trophy{font-size:72px;margin-bottom:14px}
+.completion-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;color:var(--dark);margin-bottom:6px}
+.completion-sub{color:var(--gray);font-size:15px;margin-bottom:24px}
+.completion-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.c-stat{background:var(--off);border-radius:10px;padding:14px;border:1px solid var(--border)}
+.c-stat-val{font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:var(--dark)}
+.c-stat-lbl{font-size:11px;color:var(--gray);margin-top:2px}
+.c-btn{width:100%;padding:13px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;border:none;background:var(--blue-mid);color:white;transition:all 0.2s;margin-bottom:8px;font-family:'Plus Jakarta Sans',sans-serif}
+.c-btn:hover{background:var(--blue)}
+.c-btn-ghost{background:none;border:1.5px solid var(--border);color:var(--dark);font-family:'Inter',sans-serif}
+.c-btn-ghost:hover{border-color:var(--blue-mid);color:var(--blue-mid)}
+.confetti-piece{position:fixed;width:8px;height:8px;border-radius:2px;animation:confettiFall 2s ease forwards;pointer-events:none;z-index:400}
+@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+@media(max-width:900px){
+  .sidebar{display:none}
+  .main{margin-left:0}
+  .vocab-grid{grid-template-columns:repeat(2,1fr)}
+  .lesson-content{padding:24px 20px}
+}
+
+/* DRAG & MATCH */
+.match-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.match-col{display:flex;flex-direction:column;gap:10px}
+.match-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--gray);margin-bottom:4px}
+.match-item{padding:12px 16px;background:white;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-weight:600;cursor:grab;transition:all 0.2s;color:var(--dark);user-select:none}
+.match-item:hover{border-color:var(--blue-mid);background:var(--blue-light);color:var(--blue-mid)}
+.match-item.dragging{opacity:0.4;transform:scale(0.95)}
+.match-item.matched{background:var(--green-light);border-color:var(--green);color:var(--green);cursor:default}
+.match-drop{padding:12px 16px;background:var(--off);border:1.5px dashed #cbd5e1;border-radius:10px;font-size:14px;color:var(--gray);transition:all 0.2s;min-height:46px;display:flex;align-items:center}
+.match-drop.drag-over{border-color:var(--blue-mid);background:var(--blue-light);color:var(--blue-mid)}
+.match-drop.correct{background:var(--green-light);border-color:var(--green);color:var(--green);border-style:solid;font-weight:600}
+.match-drop.wrong{background:var(--red-light);border-color:var(--red);border-style:solid;animation:shake 0.4s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+/* MEMORY GAME */
+.memory-stats{display:flex;align-items:center;gap:20px;margin-bottom:16px;font-size:14px;color:var(--gray)}
+.memory-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.mem-card{aspect-ratio:1;border-radius:12px;border:1.5px solid var(--border);background:white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;text-align:center;padding:8px;transition:all 0.35s;perspective:600px;user-select:none;position:relative}
+.mem-card .front,.mem-card .back{position:absolute;inset:0;border-radius:11px;display:flex;align-items:center;justify-content:center;padding:8px;backface-visibility:hidden;transition:transform 0.35s}
+.mem-card .front{background:linear-gradient(135deg,var(--blue),var(--blue-mid));color:white;font-size:24px;transform:rotateY(0deg)}
+.mem-card .back{background:white;color:var(--dark);font-size:12px;font-weight:600;text-align:center;transform:rotateY(180deg);border:1.5px solid var(--border)}
+.mem-card.flipped .front{transform:rotateY(-180deg)}
+.mem-card.flipped .back{transform:rotateY(0deg)}
+.mem-card.matched .front{transform:rotateY(-180deg)}
+.mem-card.matched .back{background:var(--green-light);border-color:var(--green);color:var(--green);transform:rotateY(0deg)}
+</style>
+</head>
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm"
+const supabase = createClient(
+  "https://hswdkvuuwoqvcjfhvhyb.supabase.co",
+  "sb_publishable_z7p21rI4XJajkmkm3fMETg_3HUCi4P9"
+)
+
+const { data: { user } } = await supabase.auth.getUser()
+const localOk = JSON.parse(localStorage.getItem("fe_onboarding") || "{}").done
+if (!user && !localOk) { window.location.href = "../index.html" }
+
+// Récupérer l'ID de la leçon depuis l'URL
+const lessonId = new URLSearchParams(window.location.search).get('id')
+
+if (lessonId) {
+  // Charger la leçon depuis Supabase
+  const [{ data: lesson }, { data: exercises }] = await Promise.all([
+    supabase.from('lessons').select('*').eq('id', lessonId).single(),
+    supabase.from('exercises').select('*').eq('lesson_id', lessonId).order('order_index')
+  ])
+
+  if (lesson) {
+    // Mettre à jour les titres
+    document.title = `${lesson.title_pt} — FrançaisExpress`
+    const nameEls = document.querySelectorAll('.lesson-name-top, .sb-lesson-name')
+    nameEls.forEach(el => el.textContent = `${lesson.title} — ${lesson.title_pt}`)
+    const subEls = document.querySelectorAll('.lesson-sub-top, .sb-lesson-sub')
+    subEls.forEach(el => el.textContent = `${lesson.level} · ${lesson.lesson_type} · ${lesson.duration_minutes} min`)
+    document.querySelectorAll('.xp-badge, .xp-reward-badge span').forEach(el => {
+      if (el.classList.contains('xp-badge')) el.textContent = `⚡ +${lesson.xp_reward} XP`
+      else el.textContent = `⚡ +${lesson.xp_reward} XP`
+    })
+
+    // Construire le contenu dynamiquement
+    const content = lesson.content || {}
+    window._lessonData = { lesson, exercises: exercises || [], content }
+    window._lessonId = lessonId
+
+    // Générer les steps depuis le contenu Supabase
+    buildDynamicLesson(lesson, exercises || [], content)
+  }
+}
+
+function buildDynamicLesson(lesson, exercises, content) {
+  const container = document.getElementById('dynamic-steps')
+  if (!container) return
+
+  let stepsHTML = ''
+  let navItems = ''
+  let stepIdx = 0
+
+  // ── Vocabulaire ───────────────────────────────────────────
+  if (content.vocabulary?.length) {
+    const vocab = content.vocabulary
+    stepsHTML += `
+      <div id="step-${stepIdx}" class="step-content">
+        <div class="step-header">
+          <div class="step-tag">📖 Vocabulário</div>
+          <div class="step-title syne">${lesson.title_pt}</div>
+          <div class="step-desc">Clique nas palavras para ver a tradução. Use 🔊 para ouvir.</div>
+        </div>
+        <div class="vocab-grid">
+          ${vocab.map(v => `
+            <div class="vocab-card" onclick="flipCard(this)">
+              <button class="vocab-audio" onclick="speakFr(event,'${v.fr}')">🔊</button>
+              <span class="vocab-emoji">${v.emoji || '📝'}</span>
+              <div class="vocab-fr">${v.fr}</div>
+              <div class="vocab-pt">${v.pt}</div>
+            </div>
+          `).join('')}
+        </div>
+        ${content.cultural_note ? `
+          <div style="background:var(--gold-light);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:14px 16px;margin-top:4px">
+            <strong style="font-size:12px;color:#92400e;text-transform:uppercase;letter-spacing:0.5px">💡 Nota Cultural</strong>
+            <p style="font-size:14px;color:#78350f;margin-top:6px;line-height:1.6">${content.cultural_note.text_pt}</p>
+          </div>` : ''}
+      </div>`
+    navItems += buildNavItem(stepIdx, 'Vocabulário', '📖')
+    stepIdx++
+  }
+
+  // ── Dialogue ──────────────────────────────────────────────
+  if (content.dialogue?.length) {
+    const speakers = [...new Set(content.dialogue.map(d => d.speaker))]
+    stepsHTML += `
+      <div id="step-${stepIdx}" class="step-content">
+        <div class="step-header">
+          <div class="step-tag">💬 Diálogo</div>
+          <div class="step-title syne">${lesson.title_pt}</div>
+          <div class="step-desc">Leia e ouça. Clique em 🔊 para ouvir cada linha.</div>
+        </div>
+        <div class="dialogue-box">
+          <div class="dialogue-header">
+            <div class="dialogue-avatar">🗣️</div>
+            <div class="dialogue-info">
+              <strong>${content.context?.location_fr || lesson.title}</strong>
+              <span>${content.context?.location_pt || ''}</span>
+            </div>
+          </div>
+          <div class="dialogue-body">
+            ${content.dialogue.map(d => {
+              const isRight = d.speaker === speakers[1]
+              const color = isRight ? 'buyer' : 'seller'
+              return `
+                <div class="dline ${isRight ? 'right' : ''}">
+                  <div class="dav ${color}">${d.speaker}</div>
+                  <div class="dbubble">
+                    <div class="dfr">${d.text_fr}</div>
+                    <div class="dpt">${d.text_pt}</div>
+                    <button class="daudio" onclick="speakFr(event,'${d.text_fr.replace(/'/g,"\\'")}')">🔊 Ouvir</button>
+                  </div>
+                </div>`
+            }).join('')}
+          </div>
+        </div>
+      </div>`
+    navItems += buildNavItem(stepIdx, 'Diálogo', '💬')
+    stepIdx++
+  }
+
+  // ── Grammaire ─────────────────────────────────────────────
+  if (content.grammar_rule) {
+    const g = content.grammar_rule
+    stepsHTML += `
+      <div id="step-${stepIdx}" class="step-content">
+        <div class="step-header">
+          <div class="step-tag">📝 Gramática</div>
+          <div class="step-title syne">${g.title_pt}</div>
+          <div class="step-desc">${g.explanation_pt || ''}</div>
+        </div>
+        <div class="grammar-rule">
+          <div class="grammar-rule-title">${g.title_pt} <span class="rule-badge">${lesson.level}</span></div>
+          ${g.examples?.map(ex => `
+            <div class="grammar-ex">
+              <div class="ex-fr">${ex.fr}</div>
+              <div class="ex-pt">${ex.pt}</div>
+            </div>`).join('') || ''}
+          ${g.tip_pt ? `<div style="margin-top:14px;background:var(--blue-light);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--blue-mid)">💡 ${g.tip_pt}</div>` : ''}
+        </div>
+        ${g.rules?.map(r => `
+          <div class="grammar-rule" style="margin-top:10px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+              <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:var(--blue-mid)">${r.article}</span>
+              <span style="font-size:13px;color:var(--gray)">${r.usage_pt}</span>
+            </div>
+            <div class="grammar-ex">
+              <div class="ex-fr">${r.example_fr}</div>
+              <div class="ex-pt">${r.example_pt}</div>
+            </div>
+          </div>`).join('') || ''}
+      </div>`
+    navItems += buildNavItem(stepIdx, 'Gramática', '📝')
+    stepIdx++
+  }
+
+  // ── Exercices depuis Supabase ─────────────────────────────
+  if (exercises.length) {
+    exercises.forEach((ex, i) => {
+      const typeLabel = { multiple_choice:'Escolha Múltipla', fill_blank:'Complete a Frase', true_false:'Verdadeiro/Falso', translation:'Tradução' }
+      stepsHTML += `
+        <div id="step-${stepIdx}" class="step-content">
+          <div class="step-header">
+            <div class="step-tag">✏️ Exercício ${i+1}</div>
+            <div class="step-title syne">${typeLabel[ex.exercise_type] || 'Exercício'}</div>
+          </div>
+          <div class="exercise-card" id="ex-card-${stepIdx}">
+            <div class="ex-type">${typeLabel[ex.exercise_type] || ''}</div>
+            <div class="ex-question">${ex.question_pt || ex.question}</div>
+            ${buildExerciseUI(ex, stepIdx)}
+            <div class="feedback" id="fb-${stepIdx}"></div>
+          </div>
+        </div>`
+      navItems += buildNavItem(stepIdx, `Exercício ${i+1}`, '✏️')
+      stepIdx++
+    })
+  }
+
+  // ── Drag & Match + Memory — ajoutés automatiquement si vocab ──
+  const vocabForGames = content.vocabulary?.length >= 4
+    ? content.vocabulary.slice(0, 6)
+    : null
+
+  if (vocabForGames) {
+    const sid1 = stepIdx
+    const shuffledPT = [...vocabForGames].sort(() => Math.random() - 0.5)
+    stepsHTML += `
+      <div id="step-${sid1}" class="step-content">
+        <div class="step-header">
+          <div class="step-tag">🔗 Associar</div>
+          <div class="step-title syne">Associe FR ↔ PT</div>
+          <div class="step-desc">Arraste cada palavra francesa para sua tradução em português.</div>
+        </div>
+        <div class="match-cols">
+          <div class="match-col">
+            <div class="match-label">🇫🇷 Francês</div>
+            ${vocabForGames.map(v => {
+              const key = v.fr.replace(/[^a-zA-Z]/g,'').slice(0,12)
+              return `<div class="match-item draggable" draggable="true" data-key="${key}"
+                ondragstart="window._dragKey='${key}';this.classList.add('dragging')"
+                ondragend="this.classList.remove('dragging')">
+                ${v.emoji||'📝'} ${v.fr}
+              </div>`
+            }).join('')}
+          </div>
+          <div class="match-col">
+            <div class="match-label">🇧🇷 Português</div>
+            ${shuffledPT.map(v => {
+              const key = v.fr.replace(/[^a-zA-Z]/g,'').slice(0,12)
+              return `<div class="match-drop" data-answer="${key}"
+                ondragover="event.preventDefault();this.classList.add('drag-over')"
+                ondragleave="this.classList.remove('drag-over')"
+                ondrop="onDrop(event,this,${sid1})">
+                ${v.pt}
+              </div>`
+            }).join('')}
+          </div>
+        </div>
+        <div id="match-fb-${sid1}" style="margin-top:14px"></div>
+        <button onclick="resetMatch(${sid1})" style="margin-top:12px;background:var(--off);border:1.5px solid var(--border);border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer">🔄 Reiniciar</button>
+      </div>`
+    navItems += buildNavItem(sid1, 'Associar FR↔PT', '🔗')
+    stepIdx++
+
+    const sid2 = stepIdx
+    const memData = JSON.stringify(vocabForGames.map(v=>({
+      fr: v.fr, pt: v.pt,
+      key: v.fr.replace(/[^a-zA-Z]/g,'').slice(0,12),
+      emoji: v.emoji||'📝'
+    })))
+    stepsHTML += `
+      <div id="step-${sid2}" class="step-content">
+        <div class="step-header">
+          <div class="step-tag">🧠 Memória</div>
+          <div class="step-title syne">Jogo da Memória</div>
+          <div class="step-desc">Encontre os pares FR ↔ PT. Clique nas cartas!</div>
+        </div>
+        <div class="memory-stats">
+          <span>🎯 Pares: <strong id="mp-${sid2}">0</strong>/${vocabForGames.length}</span>
+          <span>🔄 Tentativas: <strong id="mt-${sid2}">0</strong></span>
+          <button onclick="initMem(${sid2})" style="background:var(--blue-mid);color:white;border:none;border-radius:8px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer">↺</button>
+        </div>
+        <div class="memory-grid" id="mg-${sid2}"></div>
+        <div id="mw-${sid2}" style="display:none;text-align:center;padding:20px;background:var(--green-light);border-radius:14px;margin-top:14px">
+          <div style="font-size:36px">🎉</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--green);margin-top:6px">Parabéns! Todos os pares!</div>
+        </div>
+      </div>`
+    navItems += buildNavItem(sid2, 'Jogo da Memória', '🧠')
+
+    // Stocker les données pour init après rendu
+    window['_memData_'+sid2] = vocabForGames
+    stepIdx++
+  }
+
+  // ── Quiz final ────────────────────────────────────────────
+  if (lesson.lesson_type === 'quiz' || content.quiz) {
+    stepsHTML += `
+      <div id="step-${stepIdx}" class="step-content">
+        <div class="step-header">
+          <div class="step-tag">🏆 Quiz Final</div>
+          <div class="step-title syne">Quiz — ${lesson.title_pt}</div>
+          <div class="step-desc">${content.quiz?.description_pt || 'Teste seus conhecimentos!'}</div>
+        </div>
+        <div style="text-align:center;padding:32px;background:white;border-radius:var(--radius);border:1px solid var(--border)">
+          <div style="font-size:48px;margin-bottom:16px">🎯</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:700;margin-bottom:8px">Pronto para o quiz?</div>
+          <div style="color:var(--gray);font-size:14px;margin-bottom:24px">Pontuação mínima: ${content.quiz?.pass_score || 70}%</div>
+          <button class="nav-next" style="max-width:220px;margin:0 auto" onclick="completeLesson()">Completar lição ✓</button>
+        </div>
+      </div>`
+    navItems += buildNavItem(stepIdx, 'Quiz Final', '🏆')
+    stepIdx++
+  }
+
+  // Si aucun contenu structuré — afficher le contenu brut
+  if (stepIdx === 0) {
+    stepsHTML = `
+      <div id="step-0" class="step-content">
+        <div class="step-header">
+          <div class="step-tag">📖 ${lesson.lesson_type}</div>
+          <div class="step-title syne">${lesson.title_pt}</div>
+        </div>
+        <div style="background:white;border-radius:var(--radius);border:1px solid var(--border);padding:24px">
+          <pre style="font-size:13px;color:var(--gray);white-space:pre-wrap">${JSON.stringify(content, null, 2)}</pre>
+        </div>
+      </div>`
+    navItems = buildNavItem(0, lesson.title_pt, '📖')
+    stepIdx = 1
+  }
+
+  container.innerHTML = stepsHTML
+
+  // Mettre à jour le total des steps et la nav
+  window._totalSteps = stepIdx
+  const navContainer = document.getElementById('dynamic-nav')
+  if (navContainer) navContainer.innerHTML = navItems
+
+  // Appeler showStep via window (script classique)
+  if (window.showStep) {
+    window.showStep(0)
+    // Init les memory games après rendu DOM
+    setTimeout(() => {
+      Object.keys(window).forEach(k => {
+        if (k.startsWith('_memData_')) {
+          const sid = parseInt(k.replace('_memData_',''))
+          if (window.initMem) window.initMem(sid)
+        }
+      })
+    }, 100)
+  } else {
+    // Attendre que le script classique soit prêt
+    const interval = setInterval(() => {
+      if (window.showStep) {
+        clearInterval(interval)
+        window.showStep(0)
+        setTimeout(() => {
+          Object.keys(window).forEach(k => {
+            if (k.startsWith('_memData_')) {
+              const sid = parseInt(k.replace('_memData_',''))
+              if (window.initMem) window.initMem(sid)
+            }
+          })
+        }, 100)
+      }
+    }, 50)
+    setTimeout(() => clearInterval(interval), 3000)
+  }
+}
+
+function buildNavItem(idx, label, icon) {
+  return `<div class="step-item" id="step-nav-${idx}" onclick="goStep(${idx})">
+    <div class="step-dot">${idx+1}</div><span>${icon} ${label}</span>
+  </div>`
+}
+
+function buildExerciseUI(ex, stepIdx) {
+  if (ex.exercise_type === 'multiple_choice' || ex.exercise_type === 'true_false') {
+    const opts = ex.options || []
+    return `<div class="options">
+      ${opts.map((o,i) => `
+        <button class="option-btn" onclick="checkAnswer(this, ${o.is_correct}, '${(o.feedback_pt||'').replace(/'/g,"\\'")}', ${stepIdx})">
+          ${o.text}
+        </button>`).join('')}
+    </div>`
+  }
+  if (ex.exercise_type === 'fill_blank') {
+    return `
+      <div class="fill-blank">
+        <input class="blank-input" id="blank-${stepIdx}" placeholder="___" onkeydown="if(event.key==='Enter') checkFillBlank(${stepIdx},'${ex.correct_answer}')">
+      </div>
+      ${ex.hint_pt ? `<div style="font-size:12px;color:var(--gray);margin-bottom:12px">💡 ${ex.hint_pt}</div>` : ''}
+      <button class="nav-next" style="max-width:160px" onclick="checkFillBlank(${stepIdx},'${ex.correct_answer}')">Verificar</button>`
+  }
+  if (ex.exercise_type === 'translation') {
+    return `
+      <textarea style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;resize:vertical;min-height:80px" id="trans-${stepIdx}" placeholder="Escreva sua tradução aqui..."></textarea>
+      ${ex.hint_pt ? `<div style="font-size:12px;color:var(--gray);margin:8px 0">💡 ${ex.hint_pt}</div>` : ''}
+      <button class="nav-next" style="max-width:160px;margin-top:8px" onclick="checkTranslation(${stepIdx},'${ex.correct_answer.replace(/'/g,"\\'")}')">Verificar</button>`
+  }
+  return `<p style="color:var(--gray);font-size:14px">Tipo: ${ex.exercise_type}</p>`
+}
+
+// Fonctions d'exercice
+window.checkAnswer = function(btn, isCorrect, feedback, stepIdx) {
+  const card = document.getElementById('ex-card-'+stepIdx)
+  const fb = document.getElementById('fb-'+stepIdx)
+  btn.parentElement.querySelectorAll('.option-btn').forEach(b => b.disabled = true)
+  btn.classList.add(isCorrect ? 'selected-correct' : 'selected-wrong')
+  card.classList.add(isCorrect ? 'correct' : 'wrong')
+  fb.className = 'feedback show ' + (isCorrect ? 'correct' : 'wrong')
+  fb.textContent = feedback || (isCorrect ? '✓ Correto!' : '✗ Tente novamente!')
+}
+
+window.checkFillBlank = function(stepIdx, correct) {
+  const input = document.getElementById('blank-'+stepIdx)
+  const fb = document.getElementById('fb-'+stepIdx)
+  const card = document.getElementById('ex-card-'+stepIdx)
+  const isCorrect = input.value.trim().toLowerCase() === correct.toLowerCase()
+  input.classList.add(isCorrect ? 'correct-input' : 'wrong-input')
+  input.disabled = true
+  card.classList.add(isCorrect ? 'correct' : 'wrong')
+  fb.className = 'feedback show ' + (isCorrect ? 'correct' : 'wrong')
+  fb.textContent = isCorrect ? `✓ Perfeito! "${correct}"` : `✗ Resposta correta: "${correct}"`
+}
+
+window.checkTranslation = function(stepIdx, correct) {
+  const input = document.getElementById('trans-'+stepIdx)
+  const fb = document.getElementById('fb-'+stepIdx)
+  input.disabled = true
+  fb.className = 'feedback show correct'
+  fb.innerHTML = `✓ Uma resposta possível: <strong>${correct}</strong>`
+}
+
+// Sauvegarder la progression
+window.saveLessonProgress = async (score, timeSec) => {
+  if (!user || !window._lessonId) return
+  const xp = Math.round((window._lessonData?.lesson?.xp_reward || 50) * score / 100)
+  await supabase.from('user_progress').upsert({
+    user_id: user.id,
+    lesson_id: window._lessonId,
+    status: 'completed',
+    score_percent: score,
+    xp_earned: xp,
+    completed_at: new Date().toISOString(),
+    time_spent_sec: timeSec
+  }, { onConflict: 'user_id,lesson_id' })
+  await supabase.rpc('award_xp', { p_user_id: user.id, p_xp: xp })
+  await supabase.rpc('update_streak', { p_user_id: user.id })
+}
+</script>
+<body>
+
+<!-- SIDEBAR (dark, comme dashboard) -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-icon">F</div>
+    <div class="sb-logo-text">Français<span>Express</span></div>
+  </div>
+  <div class="sb-back">
+    <button class="sb-back-btn" onclick="window.location.href='dashboard.html'">
+      ← Voltar ao Dashboard
+    </button>
+  </div>
+  <div class="sb-lesson-info">
+    <div class="sb-lesson-name">Au Marché — No Mercado</div>
+    <div class="sb-lesson-sub">A1 · Diálogo · 8 passos</div>
+    <div class="sb-progress-bar">
+      <div class="sb-progress-fill" id="sb-progress" style="width:0%"></div>
+    </div>
+    <div class="sb-progress-pct" id="sb-pct">0%</div>
+  </div>
+
+  <div class="steps-nav" id="dynamic-nav">
+    <div class="step-item active">
+      <div class="step-dot">1</div><span>⏳ Carregando...</span>
+    </div>
+  </div>
+
+  <div class="sb-footer">
+    <div class="xp-reward-badge">
+      <span>⚡ +50 XP</span>
+      <small>ao completar a lição</small>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="lesson-title-bar">
+      <div class="lesson-name-top">Au Marché — No Mercado</div>
+      <div class="lesson-sub-top">A1 · Diálogo · Lição 3 de 20</div>
+      <div class="progress-bar-top">
+        <div class="progress-fill-top" id="top-progress" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="xp-badge">⚡ +50 XP</div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="lesson-content">
+    <!-- Loading state -->
+    <div id="loading-state" style="text-align:center;padding:60px 20px;color:var(--gray)">
+      <div style="font-size:40px;margin-bottom:16px">⏳</div>
+      <div style="font-size:16px;font-weight:600">Carregando lição...</div>
+    </div>
+
+    <!-- Dynamic steps injected by JS -->
+    <div id="dynamic-steps"></div>
+
+    <!-- Nav buttons -->
+    <div class="nav-buttons" id="nav-buttons" style="display:none">
+      <button class="nav-prev" onclick="prevStep()">← Anterior</button>
+      <button class="nav-next" id="next-btn" onclick="nextStep()">Próximo →</button>
+    </div>
+  </div><!-- end lesson-content -->
+</div><!-- end main -->
+
+<!-- COMPLETION MODAL -->
+<div class="completion-overlay" id="completion-modal">
+  <div class="completion-box">
+    <div class="completion-trophy">🎉</div>
+    <div class="completion-title syne">Lição Completa!</div>
+    <div class="completion-sub">Au Marché concluído com sucesso!</div>
+    <div class="completion-stats">
+      <div class="c-stat"><div class="c-stat-val syne">+50</div><div class="c-stat-lbl">XP Ganho</div></div>
+      <div class="c-stat"><div class="c-stat-val syne">91%</div><div class="c-stat-lbl">Acertos</div></div>
+      <div class="c-stat"><div class="c-stat-val syne">🔥48</div><div class="c-stat-lbl">Streak</div></div>
+    </div>
+    <button class="c-btn" onclick="window.location.href='dashboard.html'">🏠 Voltar ao Dashboard</button>
+    <button class="c-btn c-btn-ghost" onclick="window.location.href='dashboard.html'">▶ Próxima Lição</button>
+  </div>
+</div>
+
+<script>
+let currentStep = 0;
+const stepNames = [];
+let totalSteps = 0; // sera mis à jour dynamiquement
+
+function showStep(n) {
+  totalSteps = window._totalSteps || totalSteps || 1
+
+  // Cacher loading state
+  const loading = document.getElementById('loading-state')
+  if (loading) loading.style.display = 'none'
+
+  // Afficher nav buttons
+  const navBtns = document.getElementById('nav-buttons')
+  if (navBtns) navBtns.style.display = 'flex'
+
+  // Afficher le bon step
+  document.querySelectorAll('.step-content').forEach(el => el.style.display = 'none')
+  const stepEl = document.getElementById('step-' + n)
+  if (stepEl) stepEl.style.display = 'block'
+  else { console.warn('Step not found:', n); return }
+  currentStep = n
+
+  // Progression
+  const pct = totalSteps > 0 ? Math.round(((n + 1) / totalSteps) * 100) : 0
+  document.getElementById('top-progress') && (document.getElementById('top-progress').style.width = pct + '%')
+  document.getElementById('sb-progress') && (document.getElementById('sb-progress').style.width = pct + '%')
+  document.getElementById('sb-pct') && (document.getElementById('sb-pct').textContent = pct + '%')
+
+  // Bouton suivant
+  const nextBtn = document.getElementById('next-btn')
+  if (nextBtn) nextBtn.textContent = n >= totalSteps - 1 ? '🏆 Completar lição →' : 'Próximo →'
+
+  // Sidebar nav
+  for (let i = 0; i < totalSteps; i++) {
+    const el = document.getElementById('step-nav-' + i)
+    if (!el) continue
+    el.classList.remove('active', 'done')
+    if (i < n) el.classList.add('done')
+    else if (i === n) el.classList.add('active')
+    const dot = el.querySelector('.step-dot')
+    if (dot) dot.textContent = i < n ? '✓' : (i + 1)
+  }
+
+  window.scrollTo(0, 0)
+}
+
+function nextStep() {
+  totalSteps = window._totalSteps || totalSteps || 1
+  if (currentStep < totalSteps - 1) {
+    showStep(currentStep + 1)
+  } else {
+    completeLesson()
+  }
+}
+function prevStep() {
+  if (currentStep > 0) showStep(currentStep - 1)
+}
+function goStep(n) {
+  showStep(n)
+}
+
+function flipCard(card) {
+  card.classList.toggle('flipped');
+}
+
+function speakFr(e, text) {
+  e.stopPropagation();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'fr-FR';
+  u.rate = 0.85;
+  speechSynthesis.speak(u);
+}
+
+let scores = {correct:0, total:0};
+
+function answerMC(btn, exId, isCorrect, msg) {
+  const card = document.getElementById(exId);
+  if(card.classList.contains('correct') || card.classList.contains('wrong')) return;
+  const fb = document.getElementById('fb-'+exId);
+  btn.parentElement.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+  scores.total++;
+  if(isCorrect) {
+    btn.classList.add('selected-correct');
+    card.classList.add('correct');
+    fb.className = 'feedback correct show';
+    fb.textContent = '✅ ' + msg;
+    scores.correct++;
+  } else {
+    btn.classList.add('selected-wrong');
+    card.classList.add('wrong');
+    fb.className = 'feedback wrong show';
+    fb.textContent = '❌ ' + msg;
+    btn.parentElement.querySelectorAll('.option-btn').forEach(b => {
+      if(b.textContent.includes('✓')) b.classList.add('show-correct');
+    });
+  }
+}
+
+function checkBlank(inputId, answer, exId, fbId) {
+  const input = document.getElementById(inputId);
+  const fb = document.getElementById(fbId);
+  const card = document.getElementById(exId);
+  const val = input.value.trim().toLowerCase();
+  if(val === answer.toLowerCase()) {
+    input.classList.add('correct-input');
+    input.classList.remove('wrong-input');
+    fb.className = 'feedback correct show';
+    fb.textContent = '✅ Correto! ' + answer;
+    card.classList.add('correct');
+  } else if(val.length >= answer.length) {
+    input.classList.add('wrong-input');
+    input.classList.remove('correct-input');
+    fb.className = 'feedback wrong show';
+    fb.textContent = '❌ Tente de novo! Dica: começa com ' + answer[0].toUpperCase();
+    card.classList.add('wrong');
+    setTimeout(() => {
+      input.value='';
+      input.classList.remove('wrong-input');
+      card.classList.remove('wrong');
+    }, 1500);
+  }
+}
+
+const placedWords = [];
+function placeWord(chip, word) {
+  if(chip.classList.contains('used')) return;
+  chip.classList.add('used');
+  placedWords.push({word, chip});
+  const target = document.getElementById('sentence-target');
+  const el = document.createElement('div');
+  el.className = 'placed-word';
+  el.textContent = word;
+  el.onclick = () => removeWord(el, chip);
+  target.appendChild(el);
+}
+function removeWord(el, chip) {
+  el.remove();
+  chip.classList.remove('used');
+  const i = placedWords.findIndex(p => p.chip === chip);
+  if(i > -1) placedWords.splice(i,1);
+}
+function removeLastWord() {
+  const target = document.getElementById('sentence-target');
+  const children = target.children;
+  if(children.length && event.target === target) {
+    const last = placedWords[placedWords.length-1];
+    if(last) { last.chip.classList.remove('used'); placedWords.pop(); target.lastChild.remove(); }
+  }
+}
+function checkDragDrop() {
+  const sentence = placedWords.map(p => p.word).join(' ');
+  const correct = 'Combien coûtent les pommes ?';
+  const fb = document.getElementById('fb-drag');
+  if(sentence.toLowerCase().replace(/\s+/g,' ').trim() === correct.toLowerCase().replace(/\s+/g,' ').trim()) {
+    fb.className='feedback correct show';
+    fb.textContent='✅ Parfait! "Combien coûtent les pommes?" está correto!';
+  } else {
+    fb.className='feedback wrong show';
+    fb.textContent='❌ Não está certo ainda. Dica: a ordem é Quanto / custam / as / maçãs';
+  }
+}
+
+function completeLesson() {
+  document.getElementById('completion-modal').classList.add('open');
+  launchConfetti();
+  // Salvar no Supabase
+  const timeSec = Math.floor((Date.now() - (window._lessonStart || Date.now())) / 1000);
+  if (window.saveLessonProgress) window.saveLessonProgress(91, timeSec);
+}
+window._lessonStart = Date.now();
+function closeCompletion() {
+  document.getElementById('completion-modal').classList.remove('open');
+}
+
+function launchConfetti() {
+  const colors = ['#2563eb','#16a34a','#f59e0b','#dc2626','#1a3f6f','#60a5fa'];
+  for(let i=0;i<60;i++) {
+    const el = document.createElement('div');
+    el.className='confetti-piece';
+    el.style.cssText = `
+      left:${Math.random()*100}vw;
+      top:-10px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      width:${6+Math.random()*8}px;
+      height:${6+Math.random()*8}px;
+      animation-delay:${Math.random()*1}s;
+      animation-duration:${1.5+Math.random()*1.5}s;
+      border-radius:${Math.random()>0.5?'50%':'2px'};
+    `;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3000);
+  }
+}
+
+// ── DRAG & MATCH (dynamique) ───────────────────────────────
+window._dragKey = null
+
+function onDrop(event, dropEl, stepId) {
+  event.preventDefault()
+  dropEl.classList.remove('drag-over')
+  const key = window._dragKey
+  if (!key) return
+
+  if (key === dropEl.dataset.answer) {
+    dropEl.classList.add('correct')
+    // Marquer le draggable comme matched
+    const step = document.getElementById('step-' + stepId)
+    step.querySelectorAll('.draggable').forEach(d => {
+      if (d.dataset.key === key) { d.classList.add('matched'); d.setAttribute('draggable', false) }
+    })
+    // Vérifier si tout est complété
+    const total = step.querySelectorAll('.match-drop').length
+    const done  = step.querySelectorAll('.match-drop.correct').length
+    if (done === total) {
+      const fb = document.getElementById('match-fb-' + stepId)
+      if (fb) fb.innerHTML = `<div style="background:var(--green-light);border:1px solid rgba(22,163,74,0.2);border-radius:12px;padding:14px 18px;color:var(--green);font-weight:700;display:flex;align-items:center;gap:8px">🎉 Perfeito! Todos os pares associados!</div>`
+    }
+  } else {
+    dropEl.classList.add('wrong')
+    setTimeout(() => dropEl.classList.remove('wrong'), 700)
+  }
+  window._dragKey = null
+}
+
+function resetMatch(stepId) {
+  const step = document.getElementById('step-' + stepId)
+  if (!step) return
+  step.querySelectorAll('.match-drop').forEach(d => d.classList.remove('correct','wrong'))
+  step.querySelectorAll('.draggable').forEach(d => { d.classList.remove('matched'); d.setAttribute('draggable', true) })
+  const fb = document.getElementById('match-fb-' + stepId)
+  if (fb) fb.innerHTML = ''
+}
+
+// ── MEMORY GAME (dynamique) ────────────────────────────────
+const _memStates = {}
+
+function initMem(stepId) {
+  const pairs = window['_memData_' + stepId]
+  if (!pairs) return
+  _memStates[stepId] = { flipped: [], matched: [], tries: 0, locked: false, total: pairs.length }
+
+  document.getElementById('mp-' + stepId).textContent = '0'
+  document.getElementById('mt-' + stepId).textContent = '0'
+  document.getElementById('mw-' + stepId).style.display = 'none'
+
+  const cards = []
+  pairs.forEach(p => {
+    cards.push({ text: (p.emoji || '📝') + ' ' + p.fr, key: p.key, side: 'fr' })
+    cards.push({ text: p.pt, key: p.key, side: 'pt' })
+  })
+  cards.sort(() => Math.random() - 0.5)
+
+  const grid = document.getElementById('mg-' + stepId)
+  if (!grid) return
+  grid.innerHTML = cards.map((c, i) => `
+    <div class="mem-card" data-key="${c.key}" data-sid="${stepId}" onclick="flipMem(this)">
+      <div class="front">🇫🇷</div>
+      <div class="back">${c.text}</div>
+    </div>`).join('')
+}
+
+function flipMem(card) {
+  const sid = card.dataset.sid
+  const st = _memStates[sid]
+  if (!st || st.locked) return
+  if (card.classList.contains('flipped') || card.classList.contains('matched')) return
+  card.classList.add('flipped')
+  st.flipped.push(card)
+  if (st.flipped.length === 2) {
+    st.locked = true
+    st.tries++
+    document.getElementById('mt-' + sid).textContent = st.tries
+    const [a, b] = st.flipped
+    if (a.dataset.key === b.dataset.key) {
+      a.classList.add('matched'); b.classList.add('matched')
+      st.matched.push(a.dataset.key)
+      document.getElementById('mp-' + sid).textContent = st.matched.length
+      st.flipped = []; st.locked = false
+      if (st.matched.length === st.total) {
+        setTimeout(() => { document.getElementById('mw-' + sid).style.display = 'block' }, 400)
+      }
+    } else {
+      setTimeout(() => {
+        a.classList.remove('flipped'); b.classList.remove('flipped')
+        st.flipped = []; st.locked = false
+      }, 900)
+    }
+  }
+}
+
+// Exposer au module script
+window.showStep = showStep
+window.goStep = goStep
+window.nextStep = nextStep
+window.prevStep = prevStep
+window.completeLesson = completeLesson
+window.flipCard = flipCard
+window.speakFr = speakFr
+
+// Init — le contenu est chargé dynamiquement par le module script
+window._lessonStart = Date.now();
+</script>
+</body>
+</html>

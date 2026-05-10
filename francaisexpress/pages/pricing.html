@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planos e Preços — FrançaisExpress</title>
+<meta name="description" content="Escolha o plano ideal para aprender francês. Gratuito, Premium R$49/mês ou Business R$199/mês. Cancele quando quiser.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --blue:#1a3f6f;--blue-mid:#2563eb;--blue-light:#dbeafe;
+  --green:#16a34a;--green-light:#dcfce7;
+  --gold:#f59e0b;--gold-light:#fef3c7;
+  --red:#dc2626;--purple:#7c3aed;--purple-light:#ede9fe;
+  --white:#ffffff;--off:#f8fafc;--gray:#64748b;--dark:#0f172a;
+}
+body{font-family:'Inter',sans-serif;background:var(--white);color:var(--dark)}
+.syne{font-family:'Plus Jakarta Sans',sans-serif}
+a{text-decoration:none;color:inherit}
+
+/* Nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(37,99,235,0.08);padding:0 24px}
+.nav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:68px;gap:24px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#2563eb,#1a3f6f);border-radius:9px;display:flex;align-items:center;justify-content:center;color:white;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:17px}
+.logo-text{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:18px;color:var(--dark)}
+.logo-text span{color:var(--blue-mid)}
+.nav-links{display:flex;align-items:center;gap:4px}
+.nav-link{padding:8px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--gray);cursor:pointer;transition:all 0.2s}
+.nav-link:hover{color:var(--dark);background:var(--off)}
+.nav-cta{background:var(--blue-mid);color:white;padding:9px 22px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all 0.25s;font-family:'Inter',sans-serif}
+.nav-cta:hover{background:var(--blue);transform:translateY(-1px)}
+
+/* Hero */
+.hero{padding:120px 24px 60px;text-align:center;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 40% at 50% 0%,#dbeafe,transparent 70%);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--gold-light);color:#92400e;padding:6px 14px;border-radius:100px;font-size:13px;font-weight:600;margin-bottom:20px;border:1px solid rgba(245,158,11,0.2)}
+h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:52px;font-weight:800;line-height:1.05;color:var(--dark);margin-bottom:16px;letter-spacing:-1px;position:relative}
+h1 .accent{color:var(--blue-mid)}
+.hero-sub{font-size:18px;color:var(--gray);line-height:1.6;max-width:540px;margin:0 auto 36px;position:relative}
+
+/* Toggle */
+.billing-toggle{display:inline-flex;background:var(--off);border-radius:100px;padding:4px;margin-bottom:52px;border:1px solid #e2e8f0;position:relative}
+.toggle-opt{padding:8px 22px;border-radius:100px;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s;color:var(--gray)}
+.toggle-opt.active{background:white;color:var(--dark);box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.save-badge{background:var(--green);color:white;font-size:11px;font-weight:700;padding:2px 8px;border-radius:100px;margin-left:6px}
+
+/* Plans grid */
+.plans-section{max-width:1100px;margin:0 auto;padding:0 24px 80px}
+.plans-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;align-items:start}
+.plan-card{border-radius:20px;padding:28px;border:2px solid transparent;transition:all 0.25s;position:relative}
+.plan-card.free{background:var(--off);border-color:#e2e8f0}
+.plan-card.premium{background:linear-gradient(160deg,#1a3f6f,#2563eb,#3b82f6);color:white;transform:scale(1.02);box-shadow:0 24px 64px rgba(37,99,235,0.3)}
+.plan-card.business{background:linear-gradient(160deg,#1e1e2e,#2d1b69,#4c1d95);color:white}
+.plan-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.1)}
+.plan-card.premium:hover{transform:scale(1.02) translateY(-4px)}
+
+.popular-tag{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--gold);color:white;padding:4px 18px;border-radius:100px;font-size:12px;font-weight:700;white-space:nowrap}
+.plan-icon{font-size:32px;margin-bottom:14px;display:block}
+.plan-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;margin-bottom:6px}
+.plan-tagline{font-size:13px;opacity:0.7;margin-bottom:20px}
+.plan-price{margin-bottom:8px}
+.plan-price .amount{font-family:'Plus Jakarta Sans',sans-serif;font-size:40px;font-weight:800;line-height:1}
+.plan-price .currency{font-size:18px;font-weight:600;opacity:0.8;vertical-align:top;line-height:2.2}
+.plan-price .period{font-size:14px;opacity:0.6;margin-left:2px}
+.plan-price .per-user{font-size:12px;opacity:0.55;display:block;margin-top:3px}
+.plan-cta{display:block;text-align:center;padding:13px;border-radius:12px;font-size:15px;font-weight:700;margin:20px 0;cursor:pointer;transition:all 0.2s;border:none;font-family:'Inter',sans-serif}
+.plan-card.free .plan-cta{background:white;color:var(--blue-mid);border:2px solid var(--blue-mid)}
+.plan-card.free .plan-cta:hover{background:var(--blue-mid);color:white}
+.plan-card.premium .plan-cta{background:white;color:var(--blue-mid)}
+.plan-card.premium .plan-cta:hover{background:var(--blue-light)}
+.plan-card.business .plan-cta{background:rgba(255,255,255,0.15);color:white;border:1.5px solid rgba(255,255,255,0.3)}
+.plan-card.business .plan-cta:hover{background:rgba(255,255,255,0.25)}
+
+.plan-divider{border:none;border-top:1px solid rgba(0,0,0,0.06);margin:16px 0}
+.plan-card.premium .plan-divider,.plan-card.business .plan-divider{border-color:rgba(255,255,255,0.15)}
+.features-list{list-style:none;display:flex;flex-direction:column;gap:10px}
+.features-list li{display:flex;align-items:flex-start;gap:10px;font-size:14px;line-height:1.4}
+.feat-check{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px}
+.plan-card.free .feat-check.yes{background:var(--green-light);color:var(--green)}
+.plan-card.free .feat-check.no{background:#e2e8f0;color:#94a3b8}
+.plan-card.premium .feat-check,.plan-card.business .feat-check{background:rgba(255,255,255,0.2);color:white}
+.feat-text{flex:1}
+.feat-limit{font-size:11px;opacity:0.5;display:block}
+
+/* Comparison table */
+.compare-section{max-width:900px;margin:0 auto;padding:0 24px 80px}
+.compare-section h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:32px;font-weight:800;text-align:center;margin-bottom:8px}
+.compare-sub{text-align:center;color:var(--gray);margin-bottom:40px}
+.compare-table{width:100%;border-collapse:collapse;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.07)}
+.compare-table thead tr{background:var(--dark)}
+.compare-table th{padding:16px 20px;text-align:left;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;color:white}
+.compare-table th:not(:first-child){text-align:center}
+.compare-table th.hl{background:var(--blue-mid)}
+.compare-table tbody tr:nth-child(even){background:var(--off)}
+.compare-table tbody tr:nth-child(odd){background:white}
+.compare-table td{padding:14px 20px;font-size:14px;border-bottom:1px solid #e2e8f0}
+.compare-table td:not(:first-child){text-align:center;font-weight:600}
+.compare-table td.feature-name{font-weight:500;color:var(--dark)}
+.compare-table td.feature-name small{display:block;font-size:12px;color:var(--gray);font-weight:400}
+.check-yes{color:var(--green);font-size:18px}
+.check-no{color:#cbd5e1;font-size:18px}
+.check-hl{color:var(--blue-mid);font-size:14px;font-weight:700}
+.cat-row td{background:var(--blue-light)!important;font-weight:700;color:var(--blue);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;padding:8px 20px}
+
+/* FAQ */
+.faq-section{max-width:700px;margin:0 auto;padding:0 24px 80px}
+.faq-section h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:32px;font-weight:800;text-align:center;margin-bottom:40px}
+.faq-item{border:1px solid #e2e8f0;border-radius:12px;margin-bottom:8px;overflow:hidden}
+.faq-q{padding:16px 20px;font-weight:600;font-size:15px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:white;transition:background 0.2s}
+.faq-q:hover{background:var(--off)}
+.faq-q .arrow{transition:transform 0.3s;font-size:12px;color:var(--gray)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height 0.35s ease,padding 0.2s;padding:0 20px;font-size:14px;color:var(--gray);line-height:1.7;background:var(--off)}
+.faq-item.open .faq-a{max-height:200px;padding:0 20px 16px}
+.faq-item.open .faq-q{background:var(--blue-light)}
+.faq-item.open .arrow{transform:rotate(180deg)}
+
+/* Testimonials mini */
+.trust-section{background:var(--off);padding:60px 24px;text-align:center;border-top:1px solid #e2e8f0}
+.trust-section h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:28px;font-weight:800;margin-bottom:32px}
+.trust-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:900px;margin:0 auto}
+.trust-card{background:white;border-radius:16px;padding:20px;border:1px solid #e2e8f0;text-align:left}
+.trust-stars{color:var(--gold);font-size:14px;margin-bottom:8px}
+.trust-text{font-size:14px;color:var(--dark);line-height:1.6;margin-bottom:12px}
+.trust-user{display:flex;align-items:center;gap:10px}
+.trust-avatar{width:32px;height:32px;border-radius:50%;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:16px}
+.trust-name{font-size:13px;font-weight:600;color:var(--dark)}
+.trust-detail{font-size:11px;color:var(--gray)}
+
+/* CTA bottom */
+.cta-bottom{background:linear-gradient(135deg,#1a3f6f,#2563eb);padding:80px 24px;text-align:center;color:white}
+.cta-bottom h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:36px;font-weight:800;margin-bottom:12px}
+.cta-bottom p{font-size:16px;opacity:0.8;margin-bottom:32px}
+.cta-bottom .btn{display:inline-block;background:white;color:var(--blue-mid);padding:15px 36px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.2s;font-family:'Plus Jakarta Sans',sans-serif;border:none}
+.cta-bottom .btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,0.2)}
+
+footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:24px;text-align:center;font-size:13px}
+footer a{color:rgba(255,255,255,0.6)}footer a:hover{color:white}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">
+      <div class="logo-icon">F</div>
+      <div class="logo-text">Français<span>Express</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html" class="nav-link">Início</a>
+      <a class="nav-link" style="color:var(--blue-mid);font-weight:600">Preços</a>
+      <a href="chat.html" class="nav-link">Chat IA</a>
+      <a href="blog.html" class="nav-link">Blog</a>
+    </div>
+    <button class="nav-cta" onclick="window.location.href='onboarding.html'">Começar grátis</button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-badge">🎁 7 dias Premium completamente grátis — sem cartão</div>
+  <h1 class="syne">Invista no seu<br><span class="accent">francês fluente</span></h1>
+  <p class="hero-sub">Preços transparentes. Cancele a qualquer momento. Sem pegadinhas.</p>
+  <div class="billing-toggle">
+    <div class="toggle-opt active" onclick="setBilling('mensal',this)">Mensal</div>
+    <div class="toggle-opt" onclick="setBilling('anual',this)">Anual <span class="save-badge">-30%</span></div>
+  </div>
+</section>
+
+<!-- Plans -->
+<section class="plans-section">
+  <div class="plans-grid">
+
+    <!-- Free -->
+    <div class="plan-card free">
+      <span class="plan-icon">🌱</span>
+      <div class="plan-name syne">Gratuito</div>
+      <div class="plan-tagline">Para começar a jornada</div>
+      <div class="plan-price">
+        <span class="currency">R$</span>
+        <span class="amount">0</span>
+        <span class="period">para sempre</span>
+      </div>
+      <button class="plan-cta" onclick="window.location.href='onboarding.html'">Criar conta grátis</button>
+      <hr class="plan-divider">
+      <ul class="features-list">
+        <li><div class="feat-check yes">✓</div><div class="feat-text">20 lições A1 completas<span class="feat-limit">Vocabulário, diálogos, gramática</span></div></li>
+        <li><div class="feat-check yes">✓</div><div class="feat-text">Chat com Prof. Claire<span class="feat-limit">10 mensagens por dia</span></div></li>
+        <li><div class="feat-check yes">✓</div><div class="feat-text">Pronúncia básica<span class="feat-limit">5 análises por semana</span></div></li>
+        <li><div class="feat-check yes">✓</div><div class="feat-text">Gamificação completa<span class="feat-limit">XP, streak, badges</span></div></li>
+        <li><div class="feat-check no">✗</div><div class="feat-text" style="color:#94a3b8">Lições A2, B1, B2</div></li>
+        <li><div class="feat-check no">✗</div><div class="feat-text" style="color:#94a3b8">Chat ilimitado</div></li>
+        <li><div class="feat-check no">✗</div><div class="feat-text" style="color:#94a3b8">Preparação TEF/TCF</div></li>
+        <li><div class="feat-check no">✗</div><div class="feat-text" style="color:#94a3b8">Modo offline</div></li>
+      </ul>
+    </div>
+
+    <!-- Premium -->
+    <div class="plan-card premium">
+      <div class="popular-tag">⭐ Mais popular</div>
+      <span class="plan-icon">🚀</span>
+      <div class="plan-name syne">Premium</div>
+      <div class="plan-tagline">Para quem quer resultado rápido</div>
+      <div class="plan-price">
+        <span class="currency">R$</span>
+        <span class="amount" id="premiumPrice">49</span>
+        <span class="period">/mês</span>
+        <span class="per-user" id="premiumAnnual"></span>
+      </div>
+      <button class="plan-cta" onclick="window.location.href='onboarding.html'">Começar 7 dias grátis →</button>
+      <hr class="plan-divider">
+      <ul class="features-list">
+        <li><div class="feat-check">✓</div><div class="feat-text">Tudo do plano gratuito</div></li>
+        <li><div class="feat-check">✓</div><div class="feat-text">Todas as lições A1 → B2<span class="feat-limit">80+ lições com conteúdo exclusivo</span></div></li>
+        <li><div class="feat-check">✓</div><div class="feat-text">Chat IA ilimitado 24h<span class="feat-limit">Prof. Claire sempre disponível</span></div></li>
+        <li><div class="feat-check">✓</div><div class="feat-text">Labo de pronúncia completo<span class="feat-limit">Análise fonética avançada</span></div></li>
+        <li><div class="feat-check">✓</div><div class="feat-text">Preparação TEF/TCF<span class="feat-limit">Simulados + exercícios específicos</span></div></li>
+        <li><div class="feat-check">✓</div><div class="feat-text">Modo Québec<span class="feat-limit">Sotaque e expressões locais</span></div></li>
+        <li><div class="feat-check">✓</div><div class="feat-text">Baixar lições offline</div></li>
+        <li><div class="feat-check">✓</div><div class="feat-text">Suporte prioritário</div></li>
+      </ul>
+    </div>
+
+    <!-- Business -->
+    <div class="plan-card business">
+      <span class="plan-icon">🏢</span>
+      <div class="plan-name syne">Business</div>
+      <div class="plan-tagline">Para equipes e empresas</div>
+      <div class="plan-price">
+        <span class="currency">R$</span>
+        <span class="amount" id="businessPrice">199</span>
+        <span class="period">/mês</span>
+        <span class="per-user" id="businessAnnual">até 10 usuários</span>
+      </div>
+      <button class="plan-cta" onclick="openContactModal()">Falar com consultor →</button>
+      <hr class="plan-divider">
+      <ul class="features-list">
+        <li><div class="feat-check">✓</div><div class="feat-text">Tudo do Premium</div></li>
+        <li><div class="feat-check">✓</div><div class="feat-text">Até 10 usuários inclusos<span class="feat-limit">+R$15/usuário adicional</span></div></li>
+        <li><div class="feat-check">✓</div><div class="feat-text">Painel de administrador<span class="feat-limit">Relatórios de progresso da equipe</span></div></li>
+        <li><div class="feat-check">✓</div><div class="feat-text">Conteúdo corporativo<span class="feat-limit">Vocabulário de negócios, emails, reuniões</span></div></li>
+        <li><div class="feat-check">✓</div><div class="feat-text">SSO e integração LMS</div></li>
+        <li><div class="feat-check">✓</div><div class="feat-text">Onboarding dedicado</div></li>
+        <li><div class="feat-check">✓</div><div class="feat-text">SLA 99,9% de uptime</div></li>
+        <li><div class="feat-check">✓</div><div class="feat-text">Fatura NF-e / boleto</div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Compare table -->
+<section class="compare-section">
+  <h2 class="syne">Compare todos os planos</h2>
+  <p class="compare-sub">Escolha com confiança — sem letras miúdas.</p>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th style="width:40%">Funcionalidade</th>
+        <th>Gratuito</th>
+        <th class="hl">Premium</th>
+        <th>Business</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="cat-row"><td colspan="4">📚 Conteúdo</td></tr>
+      <tr><td class="feature-name">Lições A1<small>Fundamentos do francês</small></td><td>20 lições</td><td class="check-hl">Todas</td><td class="check-hl">Todas</td></tr>
+      <tr><td class="feature-name">Lições A2 / B1 / B2</td><td><span class="check-no">—</span></td><td class="check-hl">✓ 60+</td><td class="check-hl">✓ 60+</td></tr>
+      <tr><td class="feature-name">Modo Québec<small>Sotaque e expressões locais</small></td><td><span class="check-no">—</span></td><td><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+      <tr><td class="feature-name">Preparação TEF/TCF</td><td><span class="check-no">—</span></td><td><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+      <tr><td class="feature-name">Modo offline</td><td><span class="check-no">—</span></td><td><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+      <tr class="cat-row"><td colspan="4">🤖 IA e Pronúncia</td></tr>
+      <tr><td class="feature-name">Chat com Prof. Claire</td><td>10/dia</td><td class="check-hl">Ilimitado</td><td class="check-hl">Ilimitado</td></tr>
+      <tr><td class="feature-name">Análise de pronúncia</td><td>5/semana</td><td class="check-hl">Ilimitado</td><td class="check-hl">Ilimitado</td></tr>
+      <tr><td class="feature-name">Feedback de voz em tempo real</td><td><span class="check-no">—</span></td><td><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+      <tr class="cat-row"><td colspan="4">👥 Equipe e Empresa</td></tr>
+      <tr><td class="feature-name">Usuários inclusos</td><td>1</td><td>1</td><td class="check-hl">Até 10</td></tr>
+      <tr><td class="feature-name">Dashboard de gestão</td><td><span class="check-no">—</span></td><td><span class="check-no">—</span></td><td><span class="check-yes">✓</span></td></tr>
+      <tr><td class="feature-name">SSO / integração LMS</td><td><span class="check-no">—</span></td><td><span class="check-no">—</span></td><td><span class="check-yes">✓</span></td></tr>
+      <tr><td class="feature-name">NF-e / boleto bancário</td><td><span class="check-no">—</span></td><td><span class="check-no">—</span></td><td><span class="check-yes">✓</span></td></tr>
+      <tr class="cat-row"><td colspan="4">🛟 Suporte</td></tr>
+      <tr><td class="feature-name">Suporte por e-mail</td><td><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+      <tr><td class="feature-name">Suporte prioritário</td><td><span class="check-no">—</span></td><td><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+      <tr><td class="feature-name">Onboarding dedicado</td><td><span class="check-no">—</span></td><td><span class="check-no">—</span></td><td><span class="check-yes">✓</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- Testimonials -->
+<section class="trust-section">
+  <h2 class="syne">47.000+ brasileiros já aprovaram</h2>
+  <div class="trust-grid">
+    <div class="trust-card">
+      <div class="trust-stars">★★★★★</div>
+      <div class="trust-text">"Em 4 meses passei no TEF com nota suficiente para o Express Entry. O FrançaisExpress foi essencial — especialmente o modo Québec!"</div>
+      <div class="trust-user">
+        <div class="trust-avatar">🧑‍💻</div>
+        <div><div class="trust-name">Carlos Mendes</div><div class="trust-detail">SP → Montreal, Canadá</div></div>
+      </div>
+    </div>
+    <div class="trust-card">
+      <div class="trust-stars">★★★★★</div>
+      <div class="trust-text">"A Prof. Claire é incrível! Ela corrija meus erros de forma gentil e explica tudo em português. Minha pronúncia melhorou absurdamente."</div>
+      <div class="trust-user">
+        <div class="trust-avatar">👩</div>
+        <div><div class="trust-name">Letícia Sousa</div><div class="trust-detail">RJ · Usuária Premium</div></div>
+      </div>
+    </div>
+    <div class="trust-card">
+      <div class="trust-stars">★★★★★</div>
+      <div class="trust-text">"Usamos o plano Business para toda a equipe do escritório. O dashboard de gestão é perfeito para acompanhar o progresso de cada colaborador."</div>
+      <div class="trust-user">
+        <div class="trust-avatar">👨‍💼</div>
+        <div><div class="trust-name">Rafael Torres</div><div class="trust-detail">Diretor RH · Multinacional</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section" style="padding-top:80px">
+  <h2 class="syne">Dúvidas frequentes</h2>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Preciso de cartão de crédito para o teste grátis? <span class="arrow">▼</span></div>
+    <div class="faq-a">Não! Os 7 dias grátis não exigem nenhum dado de pagamento. Você só precisa criar uma conta com e-mail. Se quiser continuar com o Premium após o período, ai sim solicitamos o pagamento.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Posso cancelar a qualquer momento? <span class="arrow">▼</span></div>
+    <div class="faq-a">Sim, sem burocracia. Você pode cancelar com um clique no painel de configurações a qualquer momento. Ao cancelar, você mantém acesso até o fim do período pago.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">O plano anual é cobrado tudo de uma vez? <span class="arrow">▼</span></div>
+    <div class="faq-a">Sim, o plano anual é cobrado uma única vez. Você economiza 30% em relação ao plano mensal. O plano Premium anual sai por R$34,30/mês (cobrado como R$411,60 à vista).</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Quais formas de pagamento são aceitas? <span class="arrow">▼</span></div>
+    <div class="faq-a">Aceitamos cartão de crédito (Visa, Mastercard, Elo, Amex), PIX e boleto bancário. Para o plano Business, emitimos NF-e.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">O FrançaisExpress serve para o TEF Canadá? <span class="arrow">▼</span></div>
+    <div class="faq-a">Sim! O plano Premium inclui módulo específico de preparação para o TEF Canadá, TEFAQ e TCF. O modo Québec prepara você para o sotaque e vocabulário que a banca avalia.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Posso mudar de plano depois? <span class="arrow">▼</span></div>
+    <div class="faq-a">Claro! Você pode fazer upgrade ou downgrade a qualquer momento. No upgrade, o valor é calculado pro-rata. No downgrade, você mantém o plano atual até o fim do período.</div>
+  </div>
+</section>
+
+<!-- CTA bottom -->
+<section class="cta-bottom">
+  <h2 class="syne">Pronto para falar francês?</h2>
+  <p>7 dias Premium grátis. Sem cartão. Sem pegadinhas.</p>
+  <button class="btn" onclick="window.location.href='onboarding.html'">Começar agora — é grátis 🚀</button>
+</section>
+
+<footer>
+  <p style="margin-bottom:8px">
+    <a href="../index.html">Início</a> · <a href="pricing.html">Preços</a> · <a href="blog.html">Blog</a> · <a href="#">Termos</a> · <a href="#">Privacidade</a>
+  </p>
+  © 2025 FrançaisExpress. Todos os direitos reservados. 🇧🇷🇫🇷
+</footer>
+
+<script>
+let billing = 'mensal';
+function setBilling(type, el){
+  billing = type;
+  document.querySelectorAll('.toggle-opt').forEach(o=>o.classList.remove('active'));
+  el.classList.add('active');
+  if(type==='anual'){
+    document.getElementById('premiumPrice').textContent='34';
+    document.getElementById('premiumAnnual').textContent='R$411/ano (economize R$177)';
+    document.getElementById('businessPrice').textContent='139';
+    document.getElementById('businessAnnual').textContent='R$1.668/ano — até 10 usuários';
+  } else {
+    document.getElementById('premiumPrice').textContent='49';
+    document.getElementById('premiumAnnual').textContent='';
+    document.getElementById('businessPrice').textContent='199';
+    document.getElementById('businessAnnual').textContent='até 10 usuários';
+  }
+}
+
+function toggleFaq(el){
+  const isOpen = el.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(f=>f.classList.remove('open'));
+  if(!isOpen) el.classList.add('open');
+}
+
+function openContactModal(){
+  alert('Nosso time entrará em contato! Envie um email para business@francaisexpress.com.br');
+}
+</script>
+</body>
+</html>

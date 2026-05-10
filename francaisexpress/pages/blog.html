@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — FrançaisExpress | Dicas de francês para brasileiros</title>
+<meta name="description" content="Dicas, guias e estratégias para aprender francês mais rápido. Especial para brasileiros: pronúncia, TEF/TCF, Québec, imigração e muito mais.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --blue:#1a3f6f;--blue-mid:#2563eb;--blue-light:#dbeafe;
+  --green:#16a34a;--green-light:#dcfce7;
+  --gold:#f59e0b;--gold-light:#fef3c7;
+  --red:#dc2626;--purple:#7c3aed;--purple-light:#ede9fe;
+  --white:#ffffff;--off:#f8fafc;--gray:#64748b;--dark:#0f172a;
+}
+body{font-family:'Inter',sans-serif;background:var(--white);color:var(--dark)}
+.syne{font-family:'Plus Jakarta Sans',sans-serif}
+a{text-decoration:none;color:inherit}
+img{max-width:100%}
+
+/* Nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(37,99,235,0.08);padding:0 24px}
+.nav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:68px;gap:24px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#2563eb,#1a3f6f);border-radius:9px;display:flex;align-items:center;justify-content:center;color:white;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:17px}
+.logo-text{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:18px;color:var(--dark)}
+.logo-text span{color:var(--blue-mid)}
+.nav-links{display:flex;align-items:center;gap:4px}
+.nav-link{padding:8px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--gray);cursor:pointer;transition:all 0.2s}
+.nav-link:hover{color:var(--dark);background:var(--off)}
+.nav-cta{background:var(--blue-mid);color:white;padding:9px 22px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all 0.25s;font-family:'Inter',sans-serif}
+.nav-cta:hover{background:var(--blue);transform:translateY(-1px)}
+
+/* === BLOG LIST === */
+#blogList{display:block}
+#articleView{display:none}
+
+/* Hero */
+.blog-hero{padding:110px 24px 50px;background:var(--off);border-bottom:1px solid #e2e8f0}
+.blog-hero-inner{max-width:1100px;margin:0 auto}
+.blog-hero h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:44px;font-weight:800;color:var(--dark);margin-bottom:12px;line-height:1.1}
+.blog-hero p{font-size:18px;color:var(--gray);max-width:560px;margin-bottom:28px}
+
+/* Search & filter */
+.search-bar{display:flex;gap:10px;max-width:480px;flex-wrap:wrap}
+.search-input{flex:1;padding:10px 16px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;background:white;transition:all 0.2s;color:var(--dark)}
+.search-input:focus{outline:none;border-color:var(--blue-mid);box-shadow:0 0 0 3px rgba(37,99,235,0.1)}
+
+/* Categories */
+.cats{max-width:1100px;margin:0 auto;padding:24px;display:flex;gap:8px;flex-wrap:wrap}
+.cat-btn{padding:7px 16px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid #e2e8f0;background:white;color:var(--gray);transition:all 0.2s;font-family:'Inter',sans-serif}
+.cat-btn:hover{border-color:var(--blue-mid);color:var(--blue-mid)}
+.cat-btn.active{background:var(--blue-mid);color:white;border-color:var(--blue-mid)}
+
+/* Featured article */
+.featured-wrap{max-width:1100px;margin:0 auto;padding:0 24px 40px}
+.featured-card{background:linear-gradient(135deg,#1a3f6f,#2563eb);border-radius:20px;padding:40px;color:white;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;cursor:pointer;transition:all 0.25s;position:relative;overflow:hidden}
+.featured-card::after{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;background:rgba(255,255,255,0.05);border-radius:50%;pointer-events:none}
+.featured-card:hover{transform:translateY(-3px);box-shadow:0 24px 64px rgba(37,99,235,0.3)}
+.featured-tag{display:inline-block;background:rgba(255,255,255,0.15);padding:4px 12px;border-radius:100px;font-size:12px;font-weight:700;margin-bottom:14px;letter-spacing:0.5px}
+.featured-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;line-height:1.2;margin-bottom:12px}
+.featured-desc{font-size:14px;opacity:0.8;line-height:1.6;margin-bottom:20px}
+.featured-meta{display:flex;align-items:center;gap:16px;font-size:13px;opacity:0.7}
+.featured-img{background:rgba(255,255,255,0.1);border-radius:14px;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;font-size:72px;position:relative;z-index:1}
+.read-btn{display:inline-flex;align-items:center;gap:6px;background:white;color:var(--blue-mid);padding:10px 20px;border-radius:10px;font-size:14px;font-weight:700;margin-top:14px;border:none;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s}
+.read-btn:hover{background:var(--blue-light)}
+
+/* Grid */
+.articles-wrap{max-width:1100px;margin:0 auto;padding:0 24px 80px}
+.articles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.article-card{border-radius:16px;overflow:hidden;border:1px solid #e2e8f0;background:white;cursor:pointer;transition:all 0.25s;display:flex;flex-direction:column}
+.article-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.1);border-color:rgba(37,99,235,0.2)}
+.article-img{height:180px;display:flex;align-items:center;justify-content:center;font-size:52px}
+.article-body{padding:18px;flex:1;display:flex;flex-direction:column}
+.article-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.article-tag{padding:2px 10px;border-radius:100px;font-size:11px;font-weight:700}
+.tag-pronun{background:var(--purple-light);color:var(--purple)}
+.tag-gramm{background:var(--blue-light);color:var(--blue-mid)}
+.tag-imig{background:var(--green-light);color:var(--green)}
+.tag-vocab{background:var(--gold-light);color:#92400e}
+.tag-tef{background:#fee2e2;color:var(--red)}
+.tag-dica{background:var(--off);color:var(--gray)}
+.article-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:700;line-height:1.3;color:var(--dark);margin-bottom:8px}
+.article-desc{font-size:13px;color:var(--gray);line-height:1.5;flex:1}
+.article-footer{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid #e2e8f0}
+.article-author{display:flex;align-items:center;gap:8px}
+.author-avatar{width:24px;height:24px;border-radius:50%;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:12px}
+.author-name{font-size:12px;font-weight:600;color:var(--dark)}
+.article-date{font-size:11px;color:var(--gray)}
+.article-read-time{font-size:11px;color:var(--gray)}
+
+/* Newsletter */
+.newsletter{background:var(--off);border-top:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0;padding:60px 24px;text-align:center}
+.newsletter h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:28px;font-weight:800;margin-bottom:8px}
+.newsletter p{font-size:15px;color:var(--gray);margin-bottom:24px}
+.nl-form{display:flex;gap:10px;max-width:420px;margin:0 auto}
+.nl-input{flex:1;padding:11px 16px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;font-family:'Inter',sans-serif}
+.nl-input:focus{outline:none;border-color:var(--blue-mid)}
+.nl-btn{background:var(--blue-mid);color:white;border:none;border-radius:10px;padding:11px 22px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif;transition:all 0.2s}
+.nl-btn:hover{background:var(--blue)}
+
+/* === ARTICLE VIEW === */
+.article-view-nav{padding:90px 24px 0;max-width:760px;margin:0 auto}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--gray);font-size:14px;font-weight:500;cursor:pointer;padding:8px 0;transition:color 0.2s}
+.back-btn:hover{color:var(--dark)}
+.av-header{max-width:760px;margin:0 auto;padding:20px 24px 32px}
+.av-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.av-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:36px;font-weight:800;line-height:1.15;color:var(--dark);margin-bottom:14px}
+.av-desc{font-size:18px;color:var(--gray);line-height:1.6;margin-bottom:20px}
+.av-meta{display:flex;align-items:center;gap:16px;padding:16px 0;border-top:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0}
+.av-meta-author{display:flex;align-items:center;gap:10px}
+.av-meta-avatar{width:36px;height:36px;border-radius:50%;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:18px}
+.av-meta-name{font-size:14px;font-weight:600;color:var(--dark)}
+.av-meta-date{font-size:13px;color:var(--gray)}
+.av-meta-info{display:flex;gap:16px;margin-left:auto;font-size:13px;color:var(--gray)}
+
+.av-hero-img{max-width:760px;margin:0 auto;padding:0 24px 32px}
+.av-hero-img-inner{background:linear-gradient(135deg,var(--blue-light),var(--purple-light));border-radius:16px;height:280px;display:flex;align-items:center;justify-content:center;font-size:100px}
+
+.av-content{max-width:760px;margin:0 auto;padding:0 24px 60px}
+.av-content h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:700;color:var(--dark);margin:32px 0 12px}
+.av-content h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:700;color:var(--dark);margin:24px 0 8px}
+.av-content p{font-size:16px;line-height:1.8;color:#374151;margin-bottom:16px}
+.av-content ul,.av-content ol{padding-left:20px;margin-bottom:16px}
+.av-content li{font-size:16px;line-height:1.8;color:#374151;margin-bottom:6px}
+.av-content strong{font-weight:700;color:var(--dark)}
+.av-content em{font-style:italic;color:var(--blue-mid)}
+.tip-box{background:var(--blue-light);border-left:4px solid var(--blue-mid);border-radius:0 10px 10px 0;padding:16px 18px;margin:20px 0}
+.tip-box strong{display:block;color:var(--blue-mid);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px}
+.tip-box p{margin:0;font-size:15px;color:var(--blue)}
+.warn-box{background:var(--gold-light);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;padding:16px 18px;margin:20px 0}
+.warn-box strong{display:block;color:#92400e;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px}
+.phrase-table{width:100%;border-collapse:collapse;margin:20px 0;border-radius:10px;overflow:hidden;font-size:14px}
+.phrase-table th{background:var(--dark);color:white;padding:10px 14px;text-align:left;font-weight:600}
+.phrase-table td{padding:10px 14px;border-bottom:1px solid #e2e8f0}
+.phrase-table tr:nth-child(even) td{background:var(--off)}
+.phrase-fr{font-weight:600;color:var(--blue-mid)}
+.phrase-ipa{color:var(--gray);font-style:italic}
+
+.av-cta{background:linear-gradient(135deg,#1a3f6f,#2563eb);border-radius:16px;padding:28px;color:white;text-align:center;margin:40px 0}
+.av-cta h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;margin-bottom:8px}
+.av-cta p{font-size:14px;opacity:0.8;margin-bottom:16px}
+.av-cta button{background:white;color:var(--blue-mid);border:none;border-radius:10px;padding:11px 24px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s}
+.av-cta button:hover{background:var(--blue-light)}
+
+/* Related */
+.av-related{max-width:760px;margin:0 auto;padding:0 24px 80px}
+.av-related h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:700;margin-bottom:20px}
+.related-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.related-card{background:var(--off);border-radius:12px;padding:16px;cursor:pointer;border:1px solid #e2e8f0;transition:all 0.2s}
+.related-card:hover{border-color:var(--blue-mid);background:var(--blue-light)}
+.related-title{font-weight:600;font-size:14px;line-height:1.4;margin-bottom:6px}
+.related-meta{font-size:12px;color:var(--gray)}
+
+footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:24px;text-align:center;font-size:13px}
+footer a{color:rgba(255,255,255,0.6)}footer a:hover{color:white}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">
+      <div class="logo-icon">F</div>
+      <div class="logo-text">Français<span>Express</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html" class="nav-link">Início</a>
+      <a href="pricing.html" class="nav-link">Preços</a>
+      <a href="chat.html" class="nav-link">Chat IA</a>
+      <a class="nav-link" style="color:var(--blue-mid);font-weight:600">Blog</a>
+    </div>
+    <button class="nav-cta" onclick="window.location.href='onboarding.html'">Começar grátis</button>
+  </div>
+</nav>
+
+<!-- BLOG LIST -->
+<div id="blogList">
+
+  <div class="blog-hero">
+    <div class="blog-hero-inner">
+      <h1 class="syne">Blog FrançaisExpress</h1>
+      <p>Dicas práticas, guias de gramática e estratégias para brasileiros aprenderem francês mais rápido.</p>
+      <div class="search-bar">
+        <input class="search-input" type="text" placeholder="🔍 Buscar artigos..." oninput="filterArticles(this.value)">
+      </div>
+    </div>
+  </div>
+
+  <div class="cats">
+    <button class="cat-btn active" onclick="filterCat('todos',this)">Todos</button>
+    <button class="cat-btn" onclick="filterCat('pronúncia',this)">🎤 Pronúncia</button>
+    <button class="cat-btn" onclick="filterCat('gramática',this)">📝 Gramática</button>
+    <button class="cat-btn" onclick="filterCat('imigração',this)">🇨🇦 Imigração</button>
+    <button class="cat-btn" onclick="filterCat('vocabulário',this)">📚 Vocabulário</button>
+    <button class="cat-btn" onclick="filterCat('tef',this)">📋 TEF/TCF</button>
+    <button class="cat-btn" onclick="filterCat('dicas',this)">💡 Dicas</button>
+  </div>
+
+  <!-- Featured -->
+  <div class="featured-wrap">
+    <div class="featured-card" onclick="openArticle(0)">
+      <div>
+        <div class="featured-tag">📌 Artigo em destaque</div>
+        <div class="featured-title">Os 10 erros de pronúncia que todo brasileiro comete em francês (e como corrigir)</div>
+        <div class="featured-desc">O "R" gutural, as vogais nasais, o "U" que não existe em português… Descubra os erros mais comuns e os exercícios exatos para superá-los.</div>
+        <div class="featured-meta">
+          <span>👩‍🏫 Prof. Claire Dubois</span>
+          <span>•</span>
+          <span>07 Mai 2025</span>
+          <span>•</span>
+          <span>⏱️ 8 min de leitura</span>
+        </div>
+        <button class="read-btn">Ler artigo completo →</button>
+      </div>
+      <div class="featured-img">🎤</div>
+    </div>
+  </div>
+
+  <!-- Article grid -->
+  <div class="articles-wrap">
+    <div class="articles-grid" id="articlesGrid"></div>
+  </div>
+
+  <!-- Newsletter -->
+  <div class="newsletter">
+    <h2 class="syne">📬 Receba dicas toda semana</h2>
+    <p>Francês prático direto no seu e-mail. Sem spam, só conteúdo de valor.</p>
+    <div class="nl-form">
+      <input class="nl-input" type="email" placeholder="seu@email.com">
+      <button class="nl-btn" onclick="subscribeNewsletter()">Assinar grátis</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ARTICLE VIEW -->
+<div id="articleView">
+  <div class="article-view-nav">
+    <div class="back-btn" onclick="closeArticle()">← Voltar ao blog</div>
+  </div>
+  <div class="av-header">
+    <div class="av-tags" id="avTags"></div>
+    <div class="av-title syne" id="avTitle"></div>
+    <div class="av-desc" id="avDesc"></div>
+    <div class="av-meta">
+      <div class="av-meta-author">
+        <div class="av-meta-avatar">👩‍🏫</div>
+        <div>
+          <div class="av-meta-name" id="avAuthor"></div>
+          <div class="av-meta-date" id="avDate"></div>
+        </div>
+      </div>
+      <div class="av-meta-info">
+        <span id="avReadTime"></span>
+        <span id="avViews"></span>
+      </div>
+    </div>
+  </div>
+  <div class="av-hero-img"><div class="av-hero-img-inner" id="avEmoji"></div></div>
+  <div class="av-content" id="avContent"></div>
+  <div class="av-cta">
+    <h3>Pratique o que aprendeu com a Prof. Claire! 🇫🇷</h3>
+    <p>Abra o chat agora e coloque em prática os exercícios do artigo — com correção em tempo real.</p>
+    <button onclick="window.location.href='chat.html'">Abrir Chat IA →</button>
+  </div>
+  <div class="av-related">
+    <h2 class="syne">Artigos relacionados</h2>
+    <div class="related-grid" id="relatedGrid"></div>
+  </div>
+</div>
+
+<footer>
+  <p style="margin-bottom:8px">
+    <a href="../index.html">Início</a> · <a href="pricing.html">Preços</a> · <a href="blog.html">Blog</a> · <a href="#">Termos</a> · <a href="#">Privacidade</a>
+  </p>
+  © 2025 FrançaisExpress. Todos os direitos reservados. 🇧🇷🇫🇷
+</footer>
+
+<script>
+const articles = [
+  {
+    emoji:'🎤', cat:'pronúncia', tag:'Pronúncia', tagClass:'tag-pronun',
+    title:'Os 10 erros de pronúncia que todo brasileiro comete em francês',
+    desc:'O "R" gutural, as vogais nasais, o "U" difícil — descubra e corrija os erros mais comuns.',
+    author:'Prof. Claire Dubois', date:'07 Mai 2025', readTime:'8 min', views:'12.4k visualizações',
+    bg:'#f3e8ff',
+    content:`
+      <p>Se você é brasileiro e está aprendendo francês, há grandes chances de estar cometendo pelo menos 5 dos 10 erros que listarei aqui. Não se preocupe — isso é completamente normal. O português e o francês, apesar de serem línguas irmãs (ambas derivadas do latim), têm sistemas fonéticos muito diferentes.</p>
+      <h2>1. O "R" gutural francês</h2>
+      <p>Este é, sem dúvida, o maior desafio para brasileiros. O "R" francês não existe em português padrão — ele é produzido na parte de trás da garganta (região uvular), não na frente da boca como o "R" carioca ou o "RR" caipira.</p>
+      <div class="tip-box"><strong>💡 Dica da Prof. Claire</strong><p>Tente fazer o som de gargarejar com água, mas sem a água. Esse é aproximadamente o "R" francês. Pratique com a palavra <em>rouge</em> (vermelho) até soar natural.</p></div>
+      <h2>2. As vogais nasais</h2>
+      <p>O francês tem 4 vogais nasais que não existem em português padrão: [ɑ̃], [ɛ̃], [ɔ̃] e [œ̃]. Muitos brasileiros tendem a adicionar um "N" ou "M" extra após a vogal, tornando-a incorretamente oral+nasal.</p>
+      <table class="phrase-table">
+        <thead><tr><th>Palavra</th><th>IPA</th><th>Significado</th><th>Erro comum</th></tr></thead>
+        <tbody>
+          <tr><td class="phrase-fr">pain</td><td class="phrase-ipa">[pɛ̃]</td><td>pão</td><td>❌ "pãin"</td></tr>
+          <tr><td class="phrase-fr">bon</td><td class="phrase-ipa">[bɔ̃]</td><td>bom</td><td>❌ "bom" (com M)</td></tr>
+          <tr><td class="phrase-fr">blanc</td><td class="phrase-ipa">[blɑ̃]</td><td>branco</td><td>❌ "blãnk"</td></tr>
+          <tr><td class="phrase-fr">vin</td><td class="phrase-ipa">[vɛ̃]</td><td>vinho</td><td>❌ "vĩn"</td></tr>
+        </tbody>
+      </table>
+      <h2>3. O "U" fechado [y]</h2>
+      <p>O <em>u</em> francês é uma vogal que não existe em português. Para produzi-la, posicione os lábios como se fosse dizer "U" mas tente dizer "I". Parece estranho, mas é exatamente assim!</p>
+      <h2>4. As consoantes finais mudas</h2>
+      <p>Em francês, a maioria das consoantes finais não é pronunciada — mas há exceções importantes. Brasileiros tendem a pronunciar todas as letras que vêem.</p>
+      <div class="warn-box"><strong>⚠️ Atenção</strong><p>A regra geral é: D, P, T, S finais são mudos na maioria dos casos. Mas "C, F, R, L" (CaReFuL) geralmente são pronunciados. Há muitas exceções, então aprenda caso a caso.</p></div>
+      <h2>5. A liaison</h2>
+      <p>A liaison é quando uma consoante final normalmente muda <em>é pronunciada</em> por causa da vogal que começa a palavra seguinte. Exemplo: <em>les enfants</em> → [le.zɑ̃.fɑ̃], não [le.ɑ̃.fɑ̃].</p>
+      <h2>Como praticar?</h2>
+      <p>A chave está na repetição focada. Use o Laboratório de Pronúncia do FrançaisExpress para gravar sua voz e receber análise fonética detalhada. A Prof. Claire vai identificar exatamente onde você está errando e sugerir exercícios específicos.</p>
+    `
+  },
+  {
+    emoji:'🇨🇦', cat:'imigração', tag:'Imigração', tagClass:'tag-imig',
+    title:'TEF Canadá 2025: guia completo para brasileiros aprovados',
+    desc:'Tudo sobre o TEF Canadá: estrutura da prova, pontuação mínima para Express Entry e estratégias de estudo.',
+    author:'Equipe FrançaisExpress', date:'03 Mai 2025', readTime:'12 min', views:'28.7k visualizações',
+    bg:'#dcfce7',
+    content:`
+      <p>O Test d'Évaluation de Français (TEF Canadá) é um dos exames mais importantes para quem quer imigrar para o Canadá através do Express Entry. Neste guia completo, você vai entender tudo sobre a prova.</p>
+      <h2>Estrutura do TEF Canadá</h2>
+      <p>O TEF Canadá é composto por 4 provas obrigatórias para imigração:</p>
+      <table class="phrase-table">
+        <thead><tr><th>Prova</th><th>Duração</th><th>Pontuação máx.</th></tr></thead>
+        <tbody>
+          <tr><td>Compreensão Oral</td><td>40 min</td><td>360 pontos</td></tr>
+          <tr><td>Compreensão Escrita</td><td>60 min</td><td>300 pontos</td></tr>
+          <tr><td>Expressão Escrita</td><td>60 min</td><td>450 pontos</td></tr>
+          <tr><td>Expressão Oral</td><td>12-15 min</td><td>450 pontos</td></tr>
+        </tbody>
+      </table>
+      <h2>Pontuação mínima para Express Entry</h2>
+      <p>Para o Express Entry (Federal Skilled Worker), você precisa atingir pelo menos CLB 7 em todos os módulos. Isso equivale aproximadamente a:</p>
+      <div class="tip-box"><strong>💡 Pontuação mínima CLB 7</strong><p>Compreensão Oral: 249 · Compreensão Escrita: 207 · Expressão Escrita: 310 · Expressão Oral: 310</p></div>
+      <h2>Estratégias de estudo</h2>
+      <p>Com 3 a 6 meses de preparação dedicada, a maioria dos candidatos consegue atingir o CLB 7. A chave é praticar cada módulo de forma específica.</p>
+    `
+  },
+  {
+    emoji:'📝', cat:'gramática', tag:'Gramática', tagClass:'tag-gramm',
+    title:'Articles définis vs indéfinis: a regra que os brasileiros sempre confundem',
+    desc:'Le, la, les, un, une, des, du, de la... Entenda de vez a diferença e nunca mais erre.',
+    author:'Prof. Claire Dubois', date:'29 Abr 2025', readTime:'6 min', views:'9.2k visualizações',
+    bg:'#dbeafe',
+    content:`
+      <p>Os artigos são a pedra no sapato de 90% dos brasileiros que aprendem francês. Diferente do português, o francês tem artigos partitivos, artigos contraídos e regras específicas para cada contexto.</p>
+      <h2>Artigos definidos: le, la, l', les</h2>
+      <p>Use os artigos definidos quando você está falando de algo específico, já conhecido pelo interlocutor, ou de conceitos gerais.</p>
+      <table class="phrase-table">
+        <thead><tr><th>Artigo</th><th>Uso</th><th>Exemplo</th></tr></thead>
+        <tbody>
+          <tr><td class="phrase-fr">le</td><td>Masculino singular</td><td>le livre (o livro)</td></tr>
+          <tr><td class="phrase-fr">la</td><td>Feminino singular</td><td>la maison (a casa)</td></tr>
+          <tr><td class="phrase-fr">l'</td><td>Antes de vogal</td><td>l'école (a escola)</td></tr>
+          <tr><td class="phrase-fr">les</td><td>Plural</td><td>les enfants (as crianças)</td></tr>
+        </tbody>
+      </table>
+      <h2>Artigos indefinidos: un, une, des</h2>
+      <p>Use os artigos indefinidos quando está introduzindo algo pela primeira vez ou falando de algo não específico.</p>
+      <div class="tip-box"><strong>💡 Regra de ouro</strong><p>Se você pode dizer "um/uma" em português, use <em>un/une</em>. Se pode dizer "uns/umas" ou "alguns", use <em>des</em>.</p></div>
+    `
+  },
+  {
+    emoji:'🏠', cat:'vocabulário', tag:'Vocabulário', tagClass:'tag-vocab',
+    title:'100 palavras essenciais para morar no Québec',
+    desc:'Do épicerie ao dépanneur: o vocabulário quebeqüense que nenhuma escola vai te ensinar.',
+    author:'Lucas Tremblay', date:'25 Abr 2025', readTime:'7 min', views:'15.8k visualizações',
+    bg:'#fef3c7',
+    content:`<p>O francês do Québec tem centenas de expressões que não existem na França. Dominar esse vocabulário é essencial para quem quer trabalhar e viver na província.</p><h2>Palavras do dia a dia</h2><p>Comece com essas expressões fundamentais que você vai ouvir desde o primeiro dia em Montreal ou Québec City.</p>`
+  },
+  {
+    emoji:'💬', cat:'dicas', tag:'Dicas', tagClass:'tag-dica',
+    title:'Como manter conversas em francês mesmo sendo iniciante',
+    desc:'7 estratégias para não travar quando alguém te fala em francês — mesmo no nível A1.',
+    author:'Prof. Claire Dubois', date:'20 Abr 2025', readTime:'5 min', views:'7.1k visualizações',
+    bg:'#ede9fe',
+    content:`<p>O medo de falar é o maior obstáculo para qualquer aprendiz. Mas existem estratégias simples que te permitem manter conversas mesmo com vocabulário limitado.</p>`
+  },
+  {
+    emoji:'📋', cat:'tef', tag:'TEF/TCF', tagClass:'tag-tef',
+    title:'TCF vs TEF Canadá: qual prova fazer em 2025?',
+    desc:'Diferenças, preços, validade e qual exame tem mais chances de aprovar brasileiros.',
+    author:'Equipe FrançaisExpress', date:'15 Abr 2025', readTime:'9 min', views:'21.3k visualizações',
+    bg:'#fee2e2',
+    content:`<p>A dúvida entre TEF Canadá e TCF Canada DAP é muito comum. Ambas são aceitas pelo IRCC, mas têm estruturas bem diferentes.</p>`
+  }
+];
+
+let currentCat = 'todos';
+
+function renderGrid(list){
+  const grid = document.getElementById('articlesGrid');
+  grid.innerHTML = list.map((a,i)=>`
+    <div class="article-card" onclick="openArticle(${articles.indexOf(a)})">
+      <div class="article-img" style="background:${a.bg}">${a.emoji}</div>
+      <div class="article-body">
+        <div class="article-tags"><span class="article-tag ${a.tagClass}">${a.tag}</span></div>
+        <div class="article-title">${a.title}</div>
+        <div class="article-desc">${a.desc}</div>
+        <div class="article-footer">
+          <div class="article-author">
+            <div class="author-avatar">👩‍🏫</div>
+            <div class="author-name">${a.author.split(' ').slice(0,2).join(' ')}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+            <div class="article-date">${a.date}</div>
+            <div class="article-read-time">⏱️ ${a.readTime}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterCat(cat, btn){
+  currentCat = cat;
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const filtered = cat==='todos' ? articles : articles.filter(a=>a.cat===cat);
+  renderGrid(filtered);
+}
+
+function filterArticles(q){
+  const filtered = articles.filter(a=>
+    a.title.toLowerCase().includes(q.toLowerCase()) ||
+    a.desc.toLowerCase().includes(q.toLowerCase())
+  );
+  renderGrid(filtered);
+}
+
+function openArticle(idx){
+  const a = articles[idx];
+  document.getElementById('blogList').style.display='none';
+  document.getElementById('articleView').style.display='block';
+  document.getElementById('avTags').innerHTML=`<span class="article-tag ${a.tagClass}">${a.tag}</span>`;
+  document.getElementById('avTitle').textContent=a.title;
+  document.getElementById('avDesc').textContent=a.desc;
+  document.getElementById('avAuthor').textContent=a.author;
+  document.getElementById('avDate').textContent=a.date;
+  document.getElementById('avReadTime').textContent='⏱️ '+a.readTime+' de leitura';
+  document.getElementById('avViews').textContent='👁️ '+a.views;
+  document.getElementById('avEmoji').textContent=a.emoji;
+  document.getElementById('avContent').innerHTML=a.content;
+  const related = articles.filter((_,i)=>i!==idx).slice(0,4);
+  document.getElementById('relatedGrid').innerHTML=related.map((r,i)=>`
+    <div class="related-card" onclick="openArticle(${articles.indexOf(r)})">
+      <div class="related-title">${r.emoji} ${r.title}</div>
+      <div class="related-meta">${r.readTime} · ${r.date}</div>
+    </div>
+  `).join('');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function closeArticle(){
+  document.getElementById('blogList').style.display='block';
+  document.getElementById('articleView').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function subscribeNewsletter(){
+  const inp = document.querySelector('.nl-input');
+  if(inp.value){
+    inp.value='';
+    alert('✅ Inscrito com sucesso! Verifique seu e-mail.');
+  }
+}
+
+// Init
+renderGrid(articles);
+</script>
+</body>
+</html>
