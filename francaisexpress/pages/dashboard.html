@@ -374,6 +374,9 @@ async function initDashboard() {
 
   // ── Tous les modules ─────────────────────────────────────
   if (allModules?.length) {
+    // Mettre à jour le badge
+    const badge = document.getElementById('modules-count')
+    if (badge) badge.textContent = allModules.length
     const levelOrder = ['A1','A2','B1','B2']
     const levelColors = { A1:'#16a34a', A2:'#2563eb', B1:'#f59e0b', B2:'#7c3aed' }
     const grouped = {}
@@ -529,7 +532,7 @@ window.logout = async () => {
   <nav class="sidebar-nav">
     <div class="nav-section">Aprendizado</div>
     <button class="nav-item active"><span class="nav-icon">🏠</span>Dashboard</button>
-    <button class="nav-item" onclick="window.location.href='lesson.html'"><span class="nav-icon">📚</span>Meus Cursos<span class="nav-badge">3</span></button>
+    <button class="nav-item" onclick="document.getElementById('all-modules-list')?.scrollIntoView({behavior:'smooth'})"><span class="nav-icon">📚</span>Meus Cursos<span class="nav-badge" id="modules-count">...</span></button>
     <button class="nav-item" onclick="window.location.href='lesson.html'"><span class="nav-icon">🎯</span>Lição de Hoje</button>
     <button class="nav-item" onclick="showTEFModal()"><span class="nav-icon">📋</span>Simulado TEF/TCF</button>
     <button class="nav-item" onclick="showQuebecModal()"><span class="nav-icon">🍁</span>Francês Québec</button>
