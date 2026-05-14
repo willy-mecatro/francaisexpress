@@ -943,54 +943,79 @@ function resetMatch(stepId) {
 const _memStates = {}
 
 function initMem(stepId) {
-  const pairs = window['_memData_' + stepId]
+  const sid = parseInt(stepId)
+  const pairs = window['_memData_' + sid]
   if (!pairs) return
-  _memStates[stepId] = { flipped: [], matched: [], tries: 0, locked: false, total: pairs.length }
 
-  document.getElementById('mp-' + stepId).textContent = '0'
-  document.getElementById('mt-' + stepId).textContent = '0'
-  document.getElementById('mw-' + stepId).style.display = 'none'
+  _memStates[sid] = { flipped: [], matched: [], tries: 0, locked: false, total: pairs.length }
 
+  const pairsEl = document.getElementById('mp-' + sid)
+  const triesEl = document.getElementById('mt-' + sid)
+  const winEl   = document.getElementById('mw-' + sid)
+  if (pairsEl) pairsEl.textContent = '0'
+  if (triesEl) triesEl.textContent = '0'
+  if (winEl)   winEl.style.display = 'none'
+
+  // Créer les cartes avec des clés vraiment uniques
   const cards = []
-  pairs.forEach(p => {
-    cards.push({ text: (p.emoji || '📝') + ' ' + p.fr, key: p.key, side: 'fr' })
-    cards.push({ text: p.pt, key: p.key, side: 'pt' })
+  pairs.forEach((p, i) => {
+    const uniqueKey = p.key + '_' + i  // clé unique pour éviter faux positifs
+    cards.push({ text: (p.emoji || '📝') + ' ' + p.fr, key: uniqueKey, display: 'fr' })
+    cards.push({ text: p.pt, key: uniqueKey, display: 'pt' })
   })
   cards.sort(() => Math.random() - 0.5)
 
-  const grid = document.getElementById('mg-' + stepId)
+  const grid = document.getElementById('mg-' + sid)
   if (!grid) return
-  grid.innerHTML = cards.map((c, i) => `
-    <div class="mem-card" data-key="${c.key}" data-sid="${stepId}" onclick="flipMem(this)">
-      <div class="front">🇫🇷</div>
+  grid.innerHTML = cards.map(c => `
+    <div class="mem-card" data-key="${c.key}" data-sid="${sid}" onclick="flipMem(this)">
+      <div class="front">🃏</div>
       <div class="back">${c.text}</div>
     </div>`).join('')
 }
 
 function flipMem(card) {
-  const sid = card.dataset.sid
+  const sid = parseInt(card.dataset.sid)
   const st = _memStates[sid]
   if (!st || st.locked) return
   if (card.classList.contains('flipped') || card.classList.contains('matched')) return
+  
   card.classList.add('flipped')
   st.flipped.push(card)
+  
   if (st.flipped.length === 2) {
     st.locked = true
     st.tries++
-    document.getElementById('mt-' + sid).textContent = st.tries
+    const triesEl = document.getElementById('mt-' + sid)
+    if (triesEl) triesEl.textContent = st.tries
+    
     const [a, b] = st.flipped
-    if (a.dataset.key === b.dataset.key) {
-      a.classList.add('matched'); b.classList.add('matched')
-      st.matched.push(a.dataset.key)
-      document.getElementById('mp-' + sid).textContent = st.matched.length
-      st.flipped = []; st.locked = false
-      if (st.matched.length === st.total) {
-        setTimeout(() => { document.getElementById('mw-' + sid).style.display = 'block' }, 400)
-      }
-    } else {
+    
+    // Vérifier que ce sont deux cartes DIFFÉRENTES avec la même clé
+    if (a !== b && a.dataset.key === b.dataset.key) {
+      // Correct — marquer comme matched après un court délai
       setTimeout(() => {
-        a.classList.remove('flipped'); b.classList.remove('flipped')
-        st.flipped = []; st.locked = false
+        a.classList.add('matched')
+        b.classList.add('matched')
+        st.matched.push(a.dataset.key)
+        const pairsEl = document.getElementById('mp-' + sid)
+        if (pairsEl) pairsEl.textContent = st.matched.length
+        st.flipped = []
+        st.locked = false
+        if (st.matched.length === st.total) {
+          setTimeout(() => {
+            const winEl = document.getElementById('mw-' + sid)
+            if (winEl) winEl.style.display = 'block'
+          }, 300)
+        }
+      }, 400)
+    } else {
+      // Incorrect — retourner après délai
+      setTimeout(() => {
+        a.classList.remove('flipped')
+        b.classList.remove('flipped')
+        st.flipped = []
+        st.locked = false
       }, 900)
     }
   }
