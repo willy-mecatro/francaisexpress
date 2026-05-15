@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — FrançaisExpress</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --blue:#1a3f6f;--blue-mid:#2563eb;--blue-light:#dbeafe;--blue-bright:#60a5fa;
+  --red:#dc2626;--red-light:#fee2e2;--green:#16a34a;--green-light:#dcfce7;
+  --gold:#f59e0b;--gold-light:#fef3c7;--white:#fff;--off:#f8fafc;
+  --gray:#64748b;--dark:#0f172a;--border:rgba(0,0,0,0.07);
+  --sidebar-w:260px;--radius:14px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--dark);display:flex;min-height:100vh}
+.syne{font-family:'Plus Jakarta Sans',sans-serif}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-w);background:var(--dark);min-height:100vh;position:fixed;left:0;top:0;bottom:0;display:flex;flex-direction:column;padding:0;z-index:50;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.1) transparent}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-track{background:transparent}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:3px}
+.sidebar::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.2)}
+.sidebar-logo{padding:24px 20px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.logo-mark{display:flex;align-items:center;gap:10px}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#2563eb,#60a5fa);border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:16px}
+.logo-text{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:17px;color:white}
+.logo-text span{color:#60a5fa}
+.user-card{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.user-av{width:40px;height:40px;background:linear-gradient(135deg,var(--blue-mid),var(--blue-bright));border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:white;flex-shrink:0}
+.user-row{display:flex;align-items:center;gap:12px}
+.user-name{color:white;font-weight:600;font-size:14px}
+.user-level{color:rgba(255,255,255,0.45);font-size:12px}
+.xp-bar-wrap{margin-top:10px}
+.xp-label{display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:5px}
+.xp-bar{height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden}
+.xp-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--blue-mid),var(--blue-bright));transition:width 1s ease}
+.sidebar-nav{flex:1;padding:16px 12px;overflow-y:auto}
+.nav-section{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.25);padding:0 8px;margin-bottom:8px;margin-top:20px}
+.nav-section:first-child{margin-top:0}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:all 0.2s;color:rgba(255,255,255,0.5);font-size:14px;font-weight:500;text-decoration:none;border:none;background:none;width:100%;text-align:left}
+.nav-item:hover{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.85)}
+.nav-item.active{background:rgba(37,99,235,0.2);color:white}
+.nav-item.active .nav-icon{color:var(--blue-bright)}
+.nav-icon{font-size:18px;width:20px;text-align:center}
+.nav-badge{margin-left:auto;background:var(--blue-mid);color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px}
+.sidebar-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.06)}
+.streak-widget{background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2);border-radius:12px;padding:12px}
+.streak-row{display:flex;align-items:center;gap:8px}
+.streak-fire{font-size:24px}
+.streak-info strong{color:white;font-size:14px;display:block}
+.streak-info span{color:rgba(255,255,255,0.45);font-size:12px}
+
+/* MAIN */
+.main{margin-left:var(--sidebar-w);flex:1;padding:24px 28px;max-width:calc(100vw - var(--sidebar-w));min-width:0}
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px}
+.page-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;color:var(--dark)}
+.page-sub{font-size:14px;color:var(--gray);margin-top:4px}
+.header-actions{display:flex;gap:10px}
+.btn{padding:9px 18px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all 0.2s}
+.btn-primary{background:var(--blue-mid);color:white}
+.btn-primary:hover{background:var(--blue);transform:translateY(-1px)}
+.btn-ghost{background:white;color:var(--dark);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--blue-mid);color:var(--blue-mid)}
+
+/* STATS ROW */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat-card{background:white;border-radius:var(--radius);padding:20px;border:1px solid var(--border)}
+.stat-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px}
+.stat-icon.blue{background:var(--blue-light)}
+.stat-icon.gold{background:var(--gold-light)}
+.stat-icon.green{background:var(--green-light)}
+.stat-icon.red{background:var(--red-light)}
+.stat-val{font-family:'Plus Jakarta Sans',sans-serif;font-size:28px;font-weight:800;color:var(--dark);line-height:1}
+.stat-lbl{font-size:13px;color:var(--gray);margin-top:4px}
+.stat-trend{font-size:12px;color:var(--green);font-weight:600;margin-top:6px}
+
+/* CONTENT GRID */
+.content-grid{display:grid;grid-template-columns:1fr 340px;gap:24px}
+.card{background:white;border-radius:var(--radius);border:1px solid var(--border);padding:24px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.card-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:16px;color:var(--dark)}
+.card-link{font-size:13px;color:var(--blue-mid);font-weight:600;cursor:pointer;border:none;background:none;padding:0}
+.card-link:hover{text-decoration:underline}
+
+/* LESSONS */
+.lesson-item{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:all 0.2s}
+.lesson-item:last-child{border-bottom:none;padding-bottom:0}
+.lesson-item:hover{transform:translateX(4px)}
+.lesson-thumb{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.lesson-thumb.done{background:var(--green-light)}
+.lesson-thumb.active{background:var(--blue-light)}
+.lesson-thumb.locked{background:#f1f5f9;opacity:0.6}
+.lesson-meta{flex:1;min-width:0}
+.lesson-name{font-weight:600;font-size:14px;color:var(--dark);margin-bottom:2px}
+.lesson-tags{display:flex;gap:6px;margin-bottom:6px}
+.tag{font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px}
+.tag.a1{background:var(--blue-light);color:var(--blue-mid)}
+.tag.vocab{background:var(--gold-light);color:#92400e}
+.tag.grammar{background:var(--green-light);color:#166534}
+.tag.dialog{background:var(--red-light);color:#991b1b}
+.lesson-bar{height:4px;background:#f1f5f9;border-radius:2px;overflow:hidden}
+.lesson-bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--blue-mid),var(--blue-bright));transition:width 0.8s ease}
+.lesson-pct{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;color:var(--blue-mid);flex-shrink:0}
+.lesson-check{color:var(--green);font-size:18px;flex-shrink:0}
+.lesson-lock{color:#cbd5e1;font-size:18px;flex-shrink:0}
+
+/* CONTINUE BTN */
+.continue-btn{width:100%;margin-top:20px;padding:13px;background:var(--blue-mid);color:white;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.continue-btn:hover{background:var(--blue);transform:translateY(-2px)}
+
+/* SIDEBAR CARDS */
+.streak-calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:14px}
+.day-dot{width:100%;aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--gray)}
+.day-dot.done{background:var(--green);color:white}
+.day-dot.today{background:var(--blue-mid);color:white}
+.day-dot.miss{background:#f1f5f9;color:#cbd5e1}
+.day-labels{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:4px}
+.day-lbl{font-size:9px;font-weight:700;color:var(--gray);text-align:center;text-transform:uppercase}
+
+/* BADGES */
+.badges-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.badge-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;transition:transform 0.2s}
+.badge-item:hover{transform:scale(1.1)}
+.badge-icon-wrap{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;position:relative}
+.badge-icon-wrap.earned{background:var(--gold-light)}
+.badge-icon-wrap.locked{background:#f1f5f9;filter:grayscale(1);opacity:0.4}
+.badge-name{font-size:10px;color:var(--gray);font-weight:600;text-align:center;max-width:56px}
+
+/* LEADERBOARD */
+.lb-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.lb-item:last-child{border-bottom:none;padding-bottom:0}
+.lb-rank{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:16px;width:28px;text-align:center;flex-shrink:0}
+.lb-rank.gold{color:var(--gold)}
+.lb-rank.silver{color:#94a3b8}
+.lb-rank.bronze{color:#cd7f32}
+.lb-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:14px;flex-shrink:0}
+.lb-name{flex:1;font-weight:500;font-size:14px}
+.lb-xp{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;color:var(--blue-mid)}
+.lb-item.me{background:var(--blue-light);border-radius:10px;padding:10px 12px;margin:0 -12px}
+
+/* PROGRESS CHART */
+.weekly-chart{display:flex;align-items:flex-end;gap:8px;height:100px;margin-top:14px}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.chart-bar{width:100%;border-radius:4px 4px 0 0;background:var(--blue-light);transition:height 0.5s ease;min-height:4px;position:relative;cursor:pointer}
+.chart-bar:hover{background:var(--blue-mid)}
+.chart-bar.today{background:var(--blue-mid)}
+.chart-bar-tooltip{position:absolute;top:-24px;left:50%;transform:translateX(-50%);background:var(--dark);color:white;font-size:10px;padding:2px 6px;border-radius:4px;white-space:nowrap;opacity:0;transition:opacity 0.2s;pointer-events:none}
+.chart-bar:hover .chart-bar-tooltip{opacity:1}
+.chart-day{font-size:10px;color:var(--gray);font-weight:500}
+
+/* MOBILE RESPONSIVE */
+@media(max-width:1024px){
+  .sidebar{transform:translateX(-100%)}
+  .main{margin-left:0;padding:20px}
+  .content-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .main{padding:16px}
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.stat-card{animation:fadeUp 0.4s ease backwards}
+.stat-card:nth-child(1){animation-delay:0.05s}
+.stat-card:nth-child(2){animation-delay:0.1s}
+.stat-card:nth-child(3){animation-delay:0.15s}
+.stat-card:nth-child(4){animation-delay:0.2s}
+.card{animation:fadeUp 0.4s ease 0.25s backwards}
+
+/* NOTIFICATION TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--dark);color:white;padding:14px 20px;border-radius:12px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px;transform:translateY(80px);opacity:0;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);z-index:1000;max-width:300px}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;align-items:center;justify-content:center;padding:24px}
+.modal-overlay.open{display:flex}
+.modal-box{background:white;border-radius:20px;padding:32px;max-width:480px;width:100%;animation:fadeUp 0.3s ease}
+</style>
+</head>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+const supabase = createClient(
+  'https://hswdkvuuwoqvcjfhvhyb.supabase.co',
+  'sb_publishable_z7p21rI4XJajkmkm3fMETg_3HUCi4P9'
+)
+
+async function initDashboard() {
+  const { data: { user } } = await supabase.auth.getUser()
+
+  // Pas de session → utiliser données localStorage (onboarding récent, email non confirmé)
+  const localOnboarding = JSON.parse(localStorage.getItem('fe_onboarding') || '{}')
+
+  if (!user && !localOnboarding.done) {
+    // Vraiment pas connecté → retour landing
+    window.location.href = '../index.html'
+    return
+  }
+
+  // Charger profil Supabase si connecté, sinon données locales
+  let p = null
+  if (user) {
+    const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single()
+    p = data
+    // Sync onboarding local → Supabase si pas encore fait
+    if (p && !p.onboarding_done && localOnboarding.done) {
+      await supabase.from('profiles').update({
+        goal: localOnboarding.goal,
+        current_level: localOnboarding.level,
+        daily_goal_min: localOnboarding.dailyMin,
+        onboarding_done: true
+      }).eq('id', user.id)
+      p.onboarding_done = true
+      p.current_level = localOnboarding.level
+    }
+  }
+
+  // Nom utilisateur
+  const firstName = p?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'Aluno'
+  const fullName = p?.full_name || firstName
+
+  // Titre page
+  const titleEl = document.querySelector('.page-title')
+  if (titleEl) titleEl.textContent = `Bom dia, ${firstName}! 🌟`
+
+  // Sidebar — avatar, nom, niveau
+  const avatar = document.getElementById('sb-avatar')
+  if (avatar) avatar.textContent = firstName[0].toUpperCase()
+  const sbName = document.getElementById('sb-name')
+  if (sbName) sbName.textContent = fullName
+
+  const levelLabels = { A1: 'Iniciante', A2: 'Élémentaire', B1: 'Intermédiaire', B2: 'Avancé' }
+  const lvlKey = p?.current_level || 'A1'
+  const sbLevel = document.getElementById('sb-level')
+  if (sbLevel) sbLevel.textContent = `Nível ${lvlKey} · ${levelLabels[lvlKey]}`
+
+  // Sidebar — XP bar
+  const xpTotal = p?.xp_total || 0
+  const xpWeek = p?.xp_this_week || 0
+  const xpNext = Math.ceil((xpTotal + 1) / 500) * 500
+  const xpPct = Math.min(100, Math.round((xpTotal % 500) / 500 * 100))
+  const sbXpFill = document.getElementById('sb-xp-fill')
+  if (sbXpFill) sbXpFill.style.width = xpPct + '%'
+  const sbXp = document.getElementById('sb-xp')
+  if (sbXp) sbXp.textContent = xpTotal.toLocaleString('pt-BR') + ' XP'
+  const sbXpNext = document.getElementById('sb-xp-next')
+  if (sbXpNext) sbXpNext.textContent = xpNext.toLocaleString('pt-BR') + ' XP'
+
+  // Sidebar — streak footer
+  const sbStreak = document.getElementById('sb-streak-footer')
+  if (sbStreak) sbStreak.textContent = `${p?.streak_current || 0} dias de streak!`
+
+  // Stat cards
+  const streak = p?.streak_current || 0
+  document.getElementById('stat-xp') && (document.getElementById('stat-xp').textContent = xpTotal.toLocaleString('pt-BR'))
+  document.getElementById('stat-xp-week') && (document.getElementById('stat-xp-week').textContent = `▲ +${xpWeek} esta semana`)
+  document.getElementById('stat-streak') && (document.getElementById('stat-streak').textContent = streak)
+  document.getElementById('stat-streak-sub') && (document.getElementById('stat-streak-sub').textContent = streak >= 7 ? '▲ Recorde pessoal!' : 'Continue assim!')
+  document.getElementById('stat-accuracy') && (document.getElementById('stat-accuracy').textContent = lvlKey)
+  document.getElementById('stat-accuracy-sub') && (document.getElementById('stat-accuracy-sub').textContent = `▲ Meta: ${p?.daily_goal_min || 15} min/dia`)
+
+  // Lições concluídas
+  const { data: progress } = await supabase
+    .from('user_progress')
+    .select('status')
+    .eq('user_id', user.id)
+
+  const completed = progress?.filter(r => r.status === 'completed').length || 0
+  document.getElementById('stat-lessons') && (document.getElementById('stat-lessons').textContent = completed)
+  document.getElementById('stat-lessons-sub') && (document.getElementById('stat-lessons-sub').textContent = `▲ ${completed} lições completas`)
+
+  // Sync onboarding local → Supabase se necessário
+  const localOk = JSON.parse(localStorage.getItem('fe_onboarding') || '{}')
+  if (p && !p.onboarding_done && localOk.done) {
+    await supabase.from('profiles').update({
+      goal: localOk.goal,
+      current_level: localOk.level,
+      daily_goal_min: localOk.dailyMin,
+      onboarding_done: true
+    }).eq('id', user.id)
+  }
+
+  // ── Tous les modules et leçons ──────────────────────────
+  const { data: allModules } = await supabase
+    .from('modules')
+    .select('*')
+    .eq('is_active', true)
+    .order('level')
+    .order('order_index')
+
+  const { data: allProgress } = await supabase
+    .from('user_progress')
+    .select('*')
+    .eq('user_id', user.id)
+
+  const progressMap = {}
+  allProgress?.forEach(p => { progressMap[p.lesson_id] = p })
+
+  // Récupérer la dernière leçon — Supabase en priorité, localStorage en fallback
+  const lastLessonId = p?.last_lesson_id || localStorage.getItem('fe_last_lesson_id')
+
+  // Charger la dernière leçon séparément (sans filtre de niveau)
+  let lastLessonData = null
+  if (lastLessonId) {
+    const { data: ll } = await supabase
+      .from('lessons')
+      .select('*')
+      .eq('id', lastLessonId)
+      .single()
+    // N'afficher que si pas complétée
+    if (ll && progressMap[ll.id]?.status !== 'completed') {
+      lastLessonData = ll
+    }
+  }
+
+  // Charger les leçons du niveau actuel dans l'ordre normal
+  const { data: allLvlLessons } = await supabase
+    .from('lessons')
+    .select('*')
+    .eq('level', lvlKey)
+    .eq('is_active', true)
+    .order('order_index')
+
+  // Logique simple : dernière leçon en tête, puis les autres dans l'ordre normal (sans elle)
+  const otherLessons = allLvlLessons?.filter(l => l.id !== lastLessonId) || []
+  const currentLessons = [...(lastLessonData ? [lastLessonData] : []), ...otherLessons].slice(0, 5)
+
+  const typeLabels = { vocabulary: 'Vocabulário', dialogue: 'Diálogo', grammar: 'Gramática', pronunciation: 'Pronúncia', quiz: 'Quiz', listening: 'Audição' }
+  const typeColors = { vocabulary: 'vocab', dialogue: 'dialog', grammar: 'grammar', pronunciation: 'dialog', quiz: 'vocab', listening: 'grammar' }
+  const typeIcons  = { vocabulary: '📖', dialogue: '💬', grammar: '📝', pronunciation: '🎤', quiz: '🎯', listening: '👂' }
+
+  let inProgressLesson = null
+
+  // Afficher les leçons du niveau actuel
+  if (currentLessons?.length) {
+    const titleEl2 = document.getElementById('lessons-title')
+    if (titleEl2) titleEl2.textContent = `📚 Minhas Lições ${lvlKey}`
+
+    // Lien "Ver todas" vers courses.html
+    const verTodas = document.querySelector('.card-link')
+    if (verTodas) verTodas.onclick = () => window.location.href = 'courses.html'
+
+    const listHTML = currentLessons.map((lesson, i) => {
+      const prog = progressMap[lesson.id]
+      const status = prog?.status || 'not_started'
+      const score  = prog?.score_percent || 0
+      const isDone = status === 'completed'
+      const isActive = status === 'in_progress'
+      if (isActive && !inProgressLesson) inProgressLesson = lesson
+
+      return `
+        <div class="lesson-item" style="${isActive ? 'background:linear-gradient(90deg,rgba(37,99,235,0.04),transparent);border-radius:10px;padding-left:10px' : ''}"
+             onclick="window.location.href='lesson.html?id=${lesson.id}'">
+          <div class="lesson-thumb ${isDone ? 'done' : 'active'}">
+            ${typeIcons[lesson.lesson_type] || '📖'}
+          </div>
+          <div class="lesson-meta">
+            <div class="lesson-name">
+              ${lesson.title} — ${lesson.title_pt}
+              ${isActive ? '<span style="background:var(--blue-mid);color:white;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700;margin-left:6px">Em andamento</span>' : ''}
+            </div>
+            <div class="lesson-tags">
+              <span class="tag a1">${lesson.level}</span>
+              <span class="tag ${typeColors[lesson.lesson_type] || 'vocab'}">${typeLabels[lesson.lesson_type] || ''}</span>
+            </div>
+            <div class="lesson-bar">
+              <div class="lesson-bar-fill" style="width:${isDone ? 100 : isActive ? score : 0}%"></div>
+            </div>
+          </div>
+          ${isDone ? '<span class="lesson-check">✓</span>' : isActive ? `<span class="lesson-pct">${score}%</span>` : ''}
+        </div>`
+    }).join('')
+
+    const listEl = document.getElementById('lessons-list')
+    if (listEl) listEl.innerHTML = listHTML
+  }
+
+  // Bouton continuer
+  const contBtn = document.getElementById('continue-btn')
+  if (contBtn && currentLessons?.length) {
+    contBtn.style.display = 'flex'
+    const firstNotDone = currentLessons.find(l => !progressMap[l.id] || progressMap[l.id]?.status !== 'completed')
+    if (inProgressLesson) {
+      contBtn.textContent = `▶ Continuar — ${inProgressLesson.title_pt}`
+      contBtn.onclick = () => window.location.href = `lesson.html?id=${inProgressLesson.id}`
+    } else if (firstNotDone) {
+      contBtn.textContent = `▶ Começar — ${firstNotDone.title_pt}`
+      contBtn.onclick = () => window.location.href = `lesson.html?id=${firstNotDone.id}`
+    } else {
+      contBtn.textContent = '🎉 Nível completo! Parabéns!'
+      contBtn.style.background = 'var(--green)'
+    }
+  }
+
+  // ── Résumé modules ────────────────────────────────────────
+  if (allModules?.length) {
+    const badge = document.getElementById('modules-count')
+    if (badge) badge.textContent = allModules.length
+    const countText = document.getElementById('modules-count-text')
+    if (countText) countText.textContent = `${allModules.length} módulos disponíveis — A1, A2, B1, B2`
+  }
+
+  // Badges / Conquistas
+  const [{ data: allAchievements }, { data: userAchievements }] = await Promise.all([
+    supabase.from('achievements').select('*').order('xp_bonus'),
+    user ? supabase.from('user_achievements').select('achievement_id').eq('user_id', user.id) : { data: [] }
+  ])
+
+  const earnedIds = new Set(userAchievements?.map(a => a.achievement_id) || [])
+  const badgesEl  = document.getElementById('badges-list')
+  const countEl   = document.getElementById('badges-count')
+
+  if (badgesEl && allAchievements?.length) {
+    if (countEl) countEl.textContent = `${earnedIds.size} desbloqueadas`
+    // Afficher les 4 gagnées + 4 locked
+    const earned = allAchievements.filter(a => earnedIds.has(a.id))
+    const locked = allAchievements.filter(a => !earnedIds.has(a.id))
+    const toShow = [...earned.slice(0,4), ...locked.slice(0, Math.max(0, 8-earned.slice(0,4).length))]
+    badgesEl.innerHTML = toShow.map(a => {
+      const isEarned = earnedIds.has(a.id)
+      return `<div class="badge-item" onclick="showBadge('${a.title_pt}','${a.description_pt || ''}')">
+        <div class="badge-icon-wrap ${isEarned ? 'earned' : 'locked'}">${a.icon}</div>
+        <div class="badge-name">${a.title_pt}</div>
+      </div>`
+    }).join('')
+  } else if (badgesEl) {
+    badgesEl.innerHTML = '<div style="text-align:center;padding:20px;color:var(--gray);font-size:13px">Nenhuma conquista ainda — complete lições para ganhar badges!</div>'
+  }
+
+  // Leaderboard
+  const { data: board } = await supabase
+    .from('leaderboard_weekly')
+    .select('*')
+    .limit(5)
+
+  if (window.buildLeaderboard) window.buildLeaderboard(board, user?.id)
+
+  // Graphique XP hebdomadaire — calculer XP par jour depuis user_progress
+  const xpByDay = [0,0,0,0,0,0,0] // Seg à Dom
+  if (allProgress?.length) {
+    allProgress.forEach(prog => {
+      if (!prog.completed_at || !prog.xp_earned) return
+      const d = new Date(prog.completed_at)
+      const dayOfWeek = d.getDay() === 0 ? 6 : d.getDay() - 1 // 0=Seg
+      // Seulement cette semaine
+      const now = new Date()
+      const startOfWeek = new Date(now)
+      startOfWeek.setDate(now.getDate() - (now.getDay() === 0 ? 6 : now.getDay() - 1))
+      startOfWeek.setHours(0,0,0,0)
+      if (d >= startOfWeek) xpByDay[dayOfWeek] += prog.xp_earned
+    })
+  }
+  if (window.buildChart) window.buildChart(xpByDay)
+
+  // Streak calendar — jours avec activité
+  const streakDays = []
+  if (allProgress?.length) {
+    allProgress.forEach(prog => {
+      if (prog.completed_at) {
+        const dateStr = new Date(prog.completed_at).toISOString().split('T')[0]
+        if (!streakDays.includes(dateStr)) streakDays.push(dateStr)
+      }
+    })
+  }
+  if (window.buildStreakCal) window.buildStreakCal(streakDays)
+}
+
+initDashboard()
+
+// Logout
+// Charger les leçons d'un module au clic
+window.loadModule = async function(moduleId, level, title) {
+  const lessonsCard = document.querySelector('.card')
+  const titleEl = document.getElementById('lessons-title')
+  if (titleEl) titleEl.textContent = `📚 ${title} — Nível ${level}`
+
+  const listEl = document.getElementById('lessons-list')
+  if (listEl) listEl.innerHTML = '<div style="text-align:center;padding:20px;color:var(--gray)">⏳ Carregando lições...</div>'
+
+  const { data: lessons } = await supabase
+    .from('lessons')
+    .select('*')
+    .eq('module_id', moduleId)
+    .eq('is_active', true)
+    .order('order_index')
+
+  const { data: prog } = await supabase
+    .from('user_progress')
+    .select('*')
+    .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
+
+  const progressMap = {}
+  prog?.forEach(p => { progressMap[p.lesson_id] = p })
+
+  const typeLabels = { vocabulary:'Vocabulário', dialogue:'Diálogo', grammar:'Gramática', pronunciation:'Pronúncia', quiz:'Quiz' }
+  const typeColors = { vocabulary:'vocab', dialogue:'dialog', grammar:'grammar', pronunciation:'dialog', quiz:'vocab' }
+  const typeIcons  = { vocabulary:'📖', dialogue:'💬', grammar:'📝', pronunciation:'🎤', quiz:'🎯' }
+
+  if (!lessons?.length) {
+    listEl.innerHTML = '<div style="padding:24px;text-align:center;color:var(--gray)">📭 Nenhuma lição ainda neste módulo.<br><small>Adicione leçons via Supabase SQL Editor.</small></div>'
+    return
+  }
+
+  listEl.innerHTML = lessons.map(lesson => {
+    const p = progressMap[lesson.id]
+    const isDone = p?.status === 'completed'
+    const isActive = p?.status === 'in_progress'
+    const score = p?.score_percent || 0
+    return `
+      <div class="lesson-item" onclick="window.location.href='lesson.html?id=${lesson.id}'"
+           style="${isActive ? 'background:linear-gradient(90deg,rgba(37,99,235,0.04),transparent);border-radius:10px;padding-left:10px' : ''}">
+        <div class="lesson-thumb ${isDone ? 'done' : 'active'}">${typeIcons[lesson.lesson_type] || '📖'}</div>
+        <div class="lesson-meta">
+          <div class="lesson-name">${lesson.title} — ${lesson.title_pt}</div>
+          <div class="lesson-tags">
+            <span class="tag a1">${lesson.level}</span>
+            <span class="tag ${typeColors[lesson.lesson_type] || 'vocab'}">${typeLabels[lesson.lesson_type] || ''}</span>
+          </div>
+          <div class="lesson-bar"><div class="lesson-bar-fill" style="width:${isDone ? 100 : isActive ? score : 0}%"></div></div>
+        </div>
+        ${isDone ? '<span class="lesson-check">✓</span>' : isActive ? `<span class="lesson-pct">${score}%</span>` : ''}
+      </div>`
+  }).join('')
+
+  const contBtn = document.getElementById('continue-btn')
+  if (contBtn) {
+    const first = lessons.find(l => progressMap[l.id]?.status !== 'completed')
+    contBtn.style.display = 'flex'
+    contBtn.textContent = first ? `▶ ${first.title_pt}` : '🎉 Módulo completo!'
+    if (first) contBtn.onclick = () => window.location.href = `lesson.html?id=${first.id}`
+  }
+
+  // Scroll to lessons
+  document.getElementById('lessons-title')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
+window.logout = async () => {
+  await supabase.auth.signOut()
+  window.location.href = '../index.html'
+}
+</script>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">
+      <div class="logo-icon">F</div>
+      <div class="logo-text">Français<span>Express</span></div>
+    </div>
+  </div>
+
+  <div class="user-card">
+    <div class="user-row">
+      <div class="user-av" id="sb-avatar">?</div>
+      <div>
+        <div class="user-name" id="sb-name">—</div>
+        <div class="user-level" id="sb-level">Nível A1 · Iniciante</div>
+      </div>
+    </div>
+    <div class="xp-bar-wrap">
+      <div class="xp-label"><span id="sb-xp">0 XP</span><span id="sb-xp-next">500 XP</span></div>
+      <div class="xp-bar"><div class="xp-fill" id="sb-xp-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section">Aprendizado</div>
+    <button class="nav-item active"><span class="nav-icon">🏠</span>Dashboard</button>
+    <button class="nav-item" onclick="window.location.href='courses.html'"><span class="nav-icon">📚</span>Meus Cursos<span class="nav-badge" id="modules-count">...</span></button>
+    <button class="nav-item" onclick="window.location.href='tef.html'"><span class="nav-icon">📋</span>Simulado TEF/TCF</button>
+
+    <div class="nav-section">Praticar</div>
+    <button class="nav-item" onclick="window.location.href='chat.html'"><span class="nav-icon">🤖</span>Chat com IA</button>
+    <button class="nav-item" onclick="window.location.href='pronunciation.html'"><span class="nav-icon">🎙️</span>Lab de Pronúncia</button>
+    <button class="nav-item" onclick="showFlashcardsModal()"><span class="nav-icon">🎵</span>Flashcards</button>
+
+    <div class="nav-section">Conta</div>
+    <button class="nav-item" onclick="window.location.href='profile.html'"><span class="nav-icon">🏆</span>Conquistas</button>
+    <button class="nav-item" onclick="window.location.href='profile.html'"><span class="nav-icon">👤</span>Perfil</button>
+    <button class="nav-item" onclick="window.location.href='settings.html'"><span class="nav-icon">⚙️</span>Configurações</button>
+    <button class="nav-item" onclick="window.location.href='pricing.html'"><span class="nav-icon">💎</span>Upgrade Premium</button>
+    <button class="nav-item" onclick="window.logout && window.logout()" style="color:rgba(255,100,100,0.7);margin-top:4px"><span class="nav-icon">🚪</span>Sair</button>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="streak-widget">
+      <div class="streak-row">
+        <span class="streak-fire">🔥</span>
+        <div class="streak-info"><strong id="sb-streak-footer">0 dias de streak!</strong><span>Continue assim 💪</span></div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="page-header">
+    <div>
+      <div class="page-title syne">Bom dia, João! 🌟</div>
+      <div class="page-sub">Você estudou 5 dias seguidos esta semana. Continue assim!</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-ghost">📊 Relatório</button>
+      <button class="btn btn-primary" onclick="window.location.href='lesson.html'">▶ Continuar Aprendendo</button>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon blue">⚡</div>
+      <div class="stat-val syne" id="stat-xp">0</div>
+      <div class="stat-lbl">XP Total</div>
+      <div class="stat-trend" id="stat-xp-week">▲ +0 esta semana</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon gold">🔥</div>
+      <div class="stat-val syne" id="stat-streak">0</div>
+      <div class="stat-lbl">Dias de streak</div>
+      <div class="stat-trend" id="stat-streak-sub">Continue assim!</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green">📚</div>
+      <div class="stat-val syne" id="stat-lessons">0</div>
+      <div class="stat-lbl">Lições concluídas</div>
+      <div class="stat-trend" id="stat-lessons-sub">▲ Continue!</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon red">🎯</div>
+      <div class="stat-val syne" id="stat-accuracy">—</div>
+      <div class="stat-lbl">Nível atual</div>
+      <div class="stat-trend" id="stat-accuracy-sub">▲ Progredindo!</div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content-grid">
+    <div>
+      <!-- CONTINUE LESSONS -->
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-header">
+          <span class="card-title syne" id="lessons-title">📚 Minhas Lições A1</span>
+          <button class="card-link">Ver todas →</button>
+        </div>
+        <div id="lessons-list">
+          <div style="text-align:center;padding:32px;color:var(--gray);font-size:14px">
+            ⏳ Carregando lições...
+          </div>
+        </div>
+        <button class="continue-btn" id="continue-btn" onclick="window.location.href='lesson.html'" style="display:none">
+          ▶ Continuar aprendendo
+        </button>
+      </div>
+
+      <!-- LINK TO COURSES PAGE -->
+      <div class="card" style="margin-bottom:20px;background:linear-gradient(135deg,#1a3f6f,#2563eb);border:none;cursor:pointer" onclick="window.location.href='courses.html'">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:700;color:white;margin-bottom:4px">🗺️ Ver todos os módulos</div>
+            <div style="font-size:13px;color:rgba(255,255,255,0.7)" id="modules-count-text">Carregando...</div>
+          </div>
+          <div style="font-size:28px;opacity:0.8">→</div>
+        </div>
+      </div>
+
+      <!-- WEEKLY CHART -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title syne">📈 XP Esta Semana</span>
+          <button class="card-link">Histórico completo →</button>
+        </div>
+        <div class="weekly-chart" id="weekly-chart"></div>
+        <div class="day-labels" style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:4px" id="chart-days"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <!-- STREAK CALENDAR -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title syne">🔥 Calendário de Streaks</span>
+        </div>
+        <div style="text-align:center;margin-bottom:14px">
+          <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:36px;font-weight:800;color:var(--dark)">47</span>
+          <span style="font-size:14px;color:var(--gray);display:block">dias consecutivos</span>
+        </div>
+        <div class="day-labels">
+          <div class="day-lbl">Seg</div><div class="day-lbl">Ter</div><div class="day-lbl">Qua</div>
+          <div class="day-lbl">Qui</div><div class="day-lbl">Sex</div><div class="day-lbl">Sáb</div><div class="day-lbl">Dom</div>
+        </div>
+        <div class="streak-calendar" id="streak-cal"></div>
+      </div>
+
+      <!-- LEADERBOARD -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title syne">🏆 Ranking Semanal</span>
+          <button class="card-link">Ver todos</button>
+        </div>
+        <div id="leaderboard-list">
+          <div style="text-align:center;padding:20px;color:var(--gray);font-size:13px">⏳ Carregando...</div>
+        </div>
+      </div>
+
+      <!-- BADGES -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title syne">🏅 Conquistas</span>
+          <button class="card-link" id="badges-count" onclick="window.location.href='profile.html'">Ver todas</button>
+        </div>
+        <div class="badges-row" id="badges-list">
+          <div style="text-align:center;padding:20px;color:var(--gray);font-size:13px;width:100%">⏳ Carregando...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- BADGE MODAL -->
+<div class="modal-overlay" id="badge-modal">
+  <div class="modal-box" style="text-align:center">
+    <div id="badge-modal-icon" style="font-size:64px;margin-bottom:16px"></div>
+    <div id="badge-modal-name" class="syne" style="font-size:22px;font-weight:800;margin-bottom:8px"></div>
+    <div id="badge-modal-desc" style="color:var(--gray);font-size:14px;margin-bottom:24px"></div>
+    <button onclick="closeBadgeModal()" class="btn btn-primary" style="width:100%">Fechar</button>
+  </div>
+</div>
+
+<script>
+const days = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
+
+window.buildChart = function(xpByDay) {
+  const chart = document.getElementById('weekly-chart');
+  const daysEl = document.getElementById('chart-days');
+  if (!chart || !daysEl) return;
+  chart.innerHTML = ''; daysEl.innerHTML = '';
+  const maxXP = Math.max(...xpByDay, 1);
+  const todayIdx = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
+  xpByDay.forEach((xp, i) => {
+    const h = xp ? Math.max((xp / maxXP) * 90, 8) : 4;
+    chart.innerHTML += '<div class="bar-wrap"><div class="chart-bar' + (i===todayIdx?' today':'') + '" style="height:' + h + 'px"><div class="chart-bar-tooltip">' + xp + ' XP</div></div></div>';
+    daysEl.innerHTML += '<div class="chart-day" style="text-align:center">' + days[i] + '</div>';
+  });
+};
+window.buildChart([0,0,0,0,0,0,0]);
+
+window.buildLeaderboard = function(board, userId) {
+  const el = document.getElementById('leaderboard-list');
+  if (!el) return;
+  if (!board || !board.length) { el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--gray);font-size:13px">Nenhum dado ainda esta semana</div>'; return; }
+  const icons = ['🥇','🥈','🥉'];
+  const colors = ['#f59e0b','#16a34a','#2563eb','#dc2626','#64748b'];
+  el.innerHTML = board.slice(0,5).map(function(u,i) {
+    const isMe = u.id === userId;
+    const nameParts = (u.full_name || 'Anônimo').split(' ');
+    const name = nameParts[0] + (nameParts[1] ? ' ' + nameParts[1][0] + '.' : '');
+    const av = (u.full_name || 'A')[0].toUpperCase();
+    const rankCls = i===0?' gold':i===1?' silver':i===2?' bronze':'';
+    return '<div class="lb-item' + (isMe?' me':'') + '"><div class="lb-rank' + rankCls + '">' + (icons[i]||(i+1)) + '</div><div class="lb-av" style="background:' + colors[i] + '">' + av + '</div><div class="lb-name"' + (isMe?' style="font-weight:700"':'') + '>' + name + (isMe?' (você)':'') + '</div><div class="lb-xp">' + u.xp_this_week + ' XP</div></div>';
+  }).join('');
+};
+
+window.buildStreakCal = function(streakDays) {
+  const cal = document.getElementById('streak-cal');
+  if (!cal) return;
+  cal.innerHTML = '';
+  const today = new Date();
+  for (let i = 27; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    const dateStr = d.toISOString().split('T')[0];
+    const isDone = streakDays.indexOf(dateStr) >= 0;
+    cal.innerHTML += '<div class="day-dot ' + (isDone?(i===0?'today':'done'):'miss') + '" title="' + dateStr + '"></div>';
+  }
+};
+window.buildStreakCal([]);
+
+function goToLesson(name) {
+  showToast('📚 Abrindo ' + name + '...');
+  setTimeout(() => window.location.href='lesson.html', 800);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+const badgeIcons = {'Primeiros Passos':'👣','Semana Perfeita':'🔥','Falante':'💬','Quebequense':'🍁'};
+function showBadge(name, desc) {
+  document.getElementById('badge-modal-icon').textContent = badgeIcons[name] || '🏅';
+  document.getElementById('badge-modal-name').textContent = name;
+  document.getElementById('badge-modal-desc').textContent = desc;
+  document.getElementById('badge-modal').classList.add('open');
+}
+function closeBadgeModal() {
+  document.getElementById('badge-modal').classList.remove('open');
+}
+document.getElementById('badge-modal').addEventListener('click', e => {
+  if(e.target === e.currentTarget) closeBadgeModal();
+});
+
+function showTEFModal() {
+  showToast('🔒 Módulo TEF/TCF disponível no plano Premium. Clique em Upgrade!');
+}
+function showQuebecModal() {
+  showToast('🍁 Módulo Québec disponível no plano Premium. Clique em Upgrade!');
+}
+function showFlashcardsModal() {
+  showToast('🎵 Flashcards em breve! Por enquanto pratique no Chat IA.');
+}
+
+// Animate XP fill
+setTimeout(() => {
+  document.querySelectorAll('.xp-fill,.lesson-bar-fill').forEach(el => {
+    el.style.transition = 'width 1s ease';
+  });
+}, 100);
+</script>
+</body>
+</html>

@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel — FrançaisExpress</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --blue:#1a3f6f;--blue-mid:#2563eb;--blue-light:#dbeafe;
+  --red:#dc2626;--red-light:#fee2e2;--green:#16a34a;--green-light:#dcfce7;
+  --gold:#f59e0b;--gold-light:#fef3c7;--purple:#7c3aed;--purple-light:#ede9fe;
+  --white:#fff;--off:#f8fafc;--gray:#64748b;--dark:#0f172a;--border:rgba(0,0,0,0.08);
+  --sidebar-w:240px;--radius:12px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--dark);display:flex;min-height:100vh}
+.syne{font-family:'Plus Jakarta Sans',sans-serif}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-w);background:var(--dark);min-height:100vh;position:fixed;left:0;top:0;display:flex;flex-direction:column;z-index:50}
+.sidebar-logo{padding:20px 16px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.logo-row{display:flex;align-items:center;gap:8px}
+.logo-icon{width:32px;height:32px;background:linear-gradient(135deg,#2563eb,#60a5fa);border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:14px}
+.logo-text{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:15px;color:white}
+.logo-text span{color:#60a5fa}
+.admin-tag{background:rgba(124,58,237,0.2);color:#a78bfa;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;display:inline-block;margin-top:4px;text-transform:uppercase;letter-spacing:0.5px}
+.nav{flex:1;padding:12px 8px;overflow-y:auto}
+.nav-section{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.2);padding:0 8px;margin:16px 0 6px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;color:rgba(255,255,255,0.5);width:100%;border:none;background:none;text-align:left;transition:all 0.2s}
+.nav-item:hover{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.85)}
+.nav-item.active{background:rgba(37,99,235,0.18);color:white}
+.nav-icon{font-size:16px;width:18px;text-align:center}
+.nav-badge{margin-left:auto;background:var(--red);color:white;font-size:9px;font-weight:700;padding:1px 6px;border-radius:20px}
+.sidebar-footer{padding:12px 16px;border-top:1px solid rgba(255,255,255,0.06)}
+.admin-user{display:flex;align-items:center;gap:8px}
+.admin-av{width:32px;height:32px;background:var(--purple);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:13px}
+.admin-info{font-size:12px}
+.admin-name{color:white;font-weight:600}
+.admin-role{color:rgba(255,255,255,0.4)}
+
+/* MAIN */
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:white;border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;height:56px;gap:16px}
+.page-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:18px;color:var(--dark);flex:1}
+.topbar-btn{padding:7px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all 0.2s}
+.topbar-btn.primary{background:var(--blue-mid);color:white}
+.topbar-btn.primary:hover{background:var(--blue)}
+.topbar-btn.ghost{background:var(--off);color:var(--dark);border:1px solid var(--border)}
+.topbar-btn.ghost:hover{border-color:var(--blue-mid);color:var(--blue-mid)}
+.content{padding:24px;flex:1}
+
+/* TABS */
+.tabs{display:flex;gap:4px;background:white;border-bottom:1px solid var(--border);padding:0 24px}
+.tab{padding:12px 18px;font-size:14px;font-weight:600;cursor:pointer;border:none;background:none;color:var(--gray);position:relative;transition:color 0.2s}
+.tab.active{color:var(--blue-mid)}
+.tab.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--blue-mid);border-radius:1px 1px 0 0}
+
+/* STATS GRID */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-card{background:white;border-radius:var(--radius);border:1px solid var(--border);padding:20px}
+.stat-icon{font-size:28px;margin-bottom:10px}
+.stat-val{font-family:'Plus Jakarta Sans',sans-serif;font-size:30px;font-weight:800;color:var(--dark);line-height:1}
+.stat-lbl{font-size:13px;color:var(--gray);margin-top:4px}
+.stat-trend{font-size:12px;margin-top:8px;font-weight:600;display:flex;align-items:center;gap:4px}
+.trend-up{color:var(--green)}
+.trend-down{color:var(--red)}
+.mini-bar{height:3px;background:#f1f5f9;border-radius:2px;margin-top:8px;overflow:hidden}
+.mini-fill{height:100%;border-radius:2px;background:var(--blue-mid)}
+
+/* TABLES */
+.card{background:white;border-radius:var(--radius);border:1px solid var(--border)}
+.card-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;color:var(--dark)}
+.card-actions{display:flex;gap:8px}
+.table{width:100%;border-collapse:collapse}
+.table th{padding:10px 16px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--gray);background:var(--off);text-align:left;border-bottom:1px solid var(--border)}
+.table td{padding:12px 16px;font-size:14px;border-bottom:1px solid rgba(0,0,0,0.04)}
+.table tr:last-child td{border-bottom:none}
+.table tr:hover td{background:var(--off)}
+.user-cell{display:flex;align-items:center;gap:10px}
+.user-av-sm{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:12px;font-weight:700;flex-shrink:0}
+.user-name-sm{font-weight:600;color:var(--dark);font-size:14px}
+.user-email-sm{font-size:12px;color:var(--gray)}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700}
+.badge.active{background:var(--green-light);color:#166534}
+.badge.premium{background:var(--gold-light);color:#92400e}
+.badge.free{background:var(--off);color:var(--gray);border:1px solid var(--border)}
+.badge.inactive{background:var(--red-light);color:#991b1b}
+.badge.published{background:var(--green-light);color:#166534}
+.badge.draft{background:var(--gold-light);color:#92400e}
+.action-btn{background:none;border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--dark);transition:all 0.2s;font-weight:500}
+.action-btn:hover{border-color:var(--blue-mid);color:var(--blue-mid)}
+.action-btn.red:hover{border-color:var(--red);color:var(--red)}
+
+/* CHART */
+.chart-wrap{padding:20px}
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:140px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar-fill{width:100%;border-radius:4px 4px 0 0;background:linear-gradient(to top,var(--blue),var(--blue-bright));transition:height 0.8s ease;cursor:pointer;position:relative}
+.bar-fill:hover{opacity:0.85}
+.bar-fill-tooltip{position:absolute;top:-28px;left:50%;transform:translateX(-50%);background:var(--dark);color:white;font-size:10px;padding:3px 7px;border-radius:4px;white-space:nowrap;opacity:0;transition:opacity 0.2s;pointer-events:none}
+.bar-fill:hover .bar-fill-tooltip{opacity:1}
+.bar-lbl{font-size:10px;color:var(--gray);font-weight:500;text-align:center}
+.bar-val{font-size:10px;font-weight:700;color:var(--gray)}
+
+/* LESSON EDITOR */
+.editor-grid{display:grid;grid-template-columns:300px 1fr;gap:20px}
+.lesson-list{background:white;border-radius:var(--radius);border:1px solid var(--border);overflow:hidden}
+.lesson-list-item{padding:12px 16px;border-bottom:1px solid rgba(0,0,0,0.04);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:10px}
+.lesson-list-item:last-child{border-bottom:none}
+.lesson-list-item:hover{background:var(--off)}
+.lesson-list-item.selected{background:var(--blue-light)}
+.lesson-list-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.lesson-list-name{font-weight:600;font-size:13px;color:var(--dark)}
+.lesson-list-meta{font-size:11px;color:var(--gray)}
+.drag-handle{color:rgba(0,0,0,0.2);cursor:grab;font-size:16px;flex-shrink:0}
+
+/* FORM */
+.form-group{margin-bottom:18px}
+.form-label{font-size:12px;font-weight:700;color:var(--dark);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:6px;display:block}
+.form-input{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--dark);outline:none;transition:border-color 0.2s;background:var(--off)}
+.form-input:focus{border-color:var(--blue-mid);background:white}
+.form-select{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--dark);outline:none;background:var(--off);cursor:pointer}
+.form-select:focus{border-color:var(--blue-mid);background:white}
+.form-textarea{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--dark);outline:none;resize:vertical;min-height:100px;background:var(--off)}
+.form-textarea:focus{border-color:var(--blue-mid);background:white}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* TOGGLE */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)}
+.toggle-row:last-child{border-bottom:none}
+.toggle{position:relative;width:40px;height:22px}
+.toggle input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cbd5e1;border-radius:22px;cursor:pointer;transition:0.3s}
+.slider::before{content:'';position:absolute;height:16px;width:16px;left:3px;top:3px;background:white;border-radius:50%;transition:0.3s}
+input:checked+.slider{background:var(--blue-mid)}
+input:checked+.slider::before{transform:translateX(18px)}
+
+/* PAGE SECTIONS */
+.page-section{display:none}
+.page-section.active{display:block}
+
+/* NOTIFICATION */
+.notification{position:fixed;top:70px;right:24px;background:var(--green);color:white;padding:12px 20px;border-radius:10px;font-size:14px;font-weight:600;transform:translateY(-20px);opacity:0;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);z-index:999;display:flex;align-items:center;gap:8px}
+.notification.show{transform:translateY(0);opacity:1}
+
+@media(max-width:900px){
+  .sidebar{display:none}
+  .main{margin-left:0}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .editor-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-row">
+      <div class="logo-icon">F</div>
+      <div class="logo-text">Français<span>Express</span></div>
+    </div>
+    <div class="admin-tag">Admin Panel</div>
+  </div>
+  <nav class="nav">
+    <div class="nav-section">Principal</div>
+    <button class="nav-item active" onclick="showPage('overview')"><span class="nav-icon">📊</span>Visão Geral</button>
+    <button class="nav-item" onclick="showPage('users')"><span class="nav-icon">👥</span>Usuários<span class="nav-badge">3</span></button>
+    <button class="nav-item" onclick="showPage('revenue')"><span class="nav-icon">💰</span>Receita</button>
+
+    <div class="nav-section">Conteúdo</div>
+    <button class="nav-item" onclick="showPage('lessons')"><span class="nav-icon">📚</span>Lições</button>
+    <button class="nav-item" onclick="showPage('blog')"><span class="nav-icon">📝</span>Blog / SEO</button>
+    <button class="nav-item"><span class="nav-icon">🎯</span>Exercícios</button>
+
+    <div class="nav-section">Sistema</div>
+    <button class="nav-item" onclick="showPage('settings')"><span class="nav-icon">⚙️</span>Configurações</button>
+    <button class="nav-item"><span class="nav-icon">📧</span>E-mails</button>
+    <button class="nav-item"><span class="nav-icon">🔔</span>Notificações<span class="nav-badge" style="background:var(--gold)">5</span></button>
+    <button class="nav-item" onclick="window.location.href='../index.html'"><span class="nav-icon">🌐</span>Ver Site</button>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="admin-user">
+      <div class="admin-av">A</div>
+      <div class="admin-info">
+        <div class="admin-name">Admin</div>
+        <div class="admin-role">Super Admin</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- TABS -->
+  <div class="topbar">
+    <div class="page-title syne" id="topbar-title">📊 Visão Geral</div>
+    <button class="topbar-btn ghost" onclick="exportData()">⬇ Exportar</button>
+    <button class="topbar-btn primary" id="topbar-action" onclick="primaryAction()">+ Nova Lição</button>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- OVERVIEW PAGE -->
+    <div class="page-section active" id="page-overview">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-val syne">47.284</div>
+          <div class="stat-lbl">Usuários totais</div>
+          <div class="stat-trend trend-up">▲ +1.284 esta semana</div>
+          <div class="mini-bar"><div class="mini-fill" style="width:78%"></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💎</div>
+          <div class="stat-val syne">8.312</div>
+          <div class="stat-lbl">Assinantes Premium</div>
+          <div class="stat-trend trend-up">▲ +312 este mês</div>
+          <div class="mini-bar"><div class="mini-fill" style="width:55%;background:var(--gold)"></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💰</div>
+          <div class="stat-val syne">R$407k</div>
+          <div class="stat-lbl">MRR (Receita Mensal)</div>
+          <div class="stat-trend trend-up">▲ +14% vs mês anterior</div>
+          <div class="mini-bar"><div class="mini-fill" style="width:68%;background:var(--green)"></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📚</div>
+          <div class="stat-val syne">1.8M</div>
+          <div class="stat-lbl">Lições concluídas</div>
+          <div class="stat-trend trend-up">▲ +240k esta semana</div>
+          <div class="mini-bar"><div class="mini-fill" style="width:88%;background:var(--purple)"></div></div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+        <!-- WEEKLY CHART -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title syne">📈 Novos usuários (30 dias)</span>
+            <button class="action-btn">Detalhes</button>
+          </div>
+          <div class="chart-wrap">
+            <div class="bar-chart" id="admin-chart"></div>
+          </div>
+        </div>
+
+        <!-- CONVERSION -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title syne">💡 Métricas chave</span>
+          </div>
+          <div style="padding:20px">
+            <div class="toggle-row">
+              <div>
+                <div style="font-weight:600;font-size:14px">Taxa de conversão Free→Premium</div>
+                <div style="font-size:13px;color:var(--gray)">17,6% — acima da média do setor</div>
+              </div>
+              <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:20px;color:var(--green)">17.6%</div>
+            </div>
+            <div class="toggle-row">
+              <div>
+                <div style="font-weight:600;font-size:14px">Churn Rate mensal</div>
+                <div style="font-size:13px;color:var(--gray)">3,2% — baixo e estável</div>
+              </div>
+              <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:20px;color:var(--blue-mid)">3.2%</div>
+            </div>
+            <div class="toggle-row">
+              <div>
+                <div style="font-weight:600;font-size:14px">Daily Active Users</div>
+                <div style="font-size:13px;color:var(--gray)">Usuários ativos hoje</div>
+              </div>
+              <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:20px;color:var(--gold)">9.420</div>
+            </div>
+            <div class="toggle-row">
+              <div>
+                <div style="font-weight:600;font-size:14px">Avg. Session Duration</div>
+                <div style="font-size:13px;color:var(--gray)">Tempo médio de estudo</div>
+              </div>
+              <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:20px;color:var(--purple)">24 min</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RECENT USERS -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title syne">🔔 Atividade recente</span>
+          <button class="action-btn" onclick="showPage('users')">Ver todos usuários →</button>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Usuário</th><th>Plano</th><th>Nível</th><th>Streak</th><th>Cadastro</th><th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="user-cell"><div class="user-av-sm" style="background:#2563eb">A</div><div><div class="user-name-sm">Ana Beatriz S.</div><div class="user-email-sm">ana@email.com</div></div></div></td>
+              <td><span class="badge premium">💎 Premium</span></td>
+              <td>A2</td><td>🔥 47 dias</td><td>Hoje, 14:30</td>
+              <td><button class="action-btn">Ver</button></td>
+            </tr>
+            <tr>
+              <td><div class="user-cell"><div class="user-av-sm" style="background:#16a34a">R</div><div><div class="user-name-sm">Rafael M.</div><div class="user-email-sm">rafael@email.com</div></div></div></td>
+              <td><span class="badge free">Free</span></td>
+              <td>A1</td><td>🔥 12 dias</td><td>Hoje, 13:15</td>
+              <td><button class="action-btn">Ver</button></td>
+            </tr>
+            <tr>
+              <td><div class="user-cell"><div class="user-av-sm" style="background:#dc2626">C</div><div><div class="user-name-sm">Camila T.</div><div class="user-email-sm">camila@email.com</div></div></div></td>
+              <td><span class="badge premium">💎 Premium</span></td>
+              <td>B1</td><td>🔥 89 dias</td><td>Ontem</td>
+              <td><button class="action-btn">Ver</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- USERS PAGE -->
+    <div class="page-section" id="page-users">
+      <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap">
+        <input type="text" placeholder="🔍 Buscar usuários..." style="flex:1;padding:10px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;outline:none;min-width:200px" oninput="filterUsers(this.value)">
+        <select style="padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;outline:none;background:white">
+          <option>Todos os planos</option><option>Premium</option><option>Free</option>
+        </select>
+        <select style="padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;outline:none;background:white">
+          <option>Todos os níveis</option><option>A1</option><option>A2</option><option>B1</option><option>B2</option>
+        </select>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title syne">👥 Todos os usuários (47.284)</span>
+          <div class="card-actions">
+            <button class="action-btn">⬇ Export CSV</button>
+            <button class="action-btn" style="background:var(--blue-mid);color:white;border-color:var(--blue-mid)">+ Adicionar</button>
+          </div>
+        </div>
+        <table class="table" id="users-table">
+          <thead>
+            <tr><th>Usuário</th><th>Plano</th><th>Nível</th><th>XP</th><th>Streak</th><th>Status</th><th>Ações</th></tr>
+          </thead>
+          <tbody id="users-tbody">
+            <!-- Filled by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LESSONS PAGE -->
+    <div class="page-section" id="page-lessons">
+      <div class="editor-grid">
+        <!-- LESSON LIST -->
+        <div>
+          <div style="display:flex;gap:8px;margin-bottom:12px">
+            <button class="topbar-btn primary" style="flex:1;padding:10px" onclick="newLesson()">+ Nova Lição</button>
+            <select style="padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;background:white;outline:none">
+              <option>Nível A1</option><option>Nível A2</option><option>Nível B1</option><option>Nível B2</option>
+            </select>
+          </div>
+          <div class="lesson-list">
+            <div class="card-header" style="padding:12px 16px">
+              <span class="card-title syne" style="font-size:13px">Lições A1 (20)</span>
+              <span class="badge published">Publicado</span>
+            </div>
+            <div id="lessons-list"></div>
+          </div>
+        </div>
+
+        <!-- LESSON EDITOR -->
+        <div class="card" id="lesson-editor">
+          <div class="card-header">
+            <span class="card-title syne">✏️ Editar: Au Marché</span>
+            <div class="card-actions">
+              <button class="action-btn">Prévia</button>
+              <button class="action-btn" style="background:var(--green);color:white;border-color:var(--green)" onclick="saveLesson()">✓ Salvar</button>
+            </div>
+          </div>
+          <div style="padding:20px;overflow-y:auto;max-height:calc(100vh - 200px)">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Título (Francês)</label>
+                <input class="form-input" value="Au Marché">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Título (Português)</label>
+                <input class="form-input" value="No Mercado">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Nível CEFR</label>
+                <select class="form-select"><option selected>A1</option><option>A2</option><option>B1</option><option>B2</option></select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tipo de lição</label>
+                <select class="form-select">
+                  <option>Vocabulário</option><option selected>Diálogo</option><option>Gramática</option><option>Quiz</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Descrição</label>
+              <textarea class="form-textarea">Aprenda a fazer compras no mercado francês. Vocabulário de legumes, frutas, preços e expressões essenciais.</textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Emoji</label>
+              <input class="form-input" value="🛒" style="width:80px">
+            </div>
+            <div class="form-group">
+              <label class="form-label">XP por completar</label>
+              <input class="form-input" type="number" value="50" style="width:100px">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tags SEO</label>
+              <input class="form-input" value="mercado, compras, legumes, francês, vocabulário">
+            </div>
+
+            <div style="border-top:1px solid var(--border);padding-top:16px;margin-top:4px">
+              <div class="form-label" style="margin-bottom:12px;display:block">⚙️ Configurações</div>
+              <div class="toggle-row">
+                <div>
+                  <div style="font-weight:600;font-size:13px">Publicado</div>
+                  <div style="font-size:12px;color:var(--gray)">Visível para os usuários</div>
+                </div>
+                <label class="toggle"><input type="checkbox" checked><span class="slider"></span></label>
+              </div>
+              <div class="toggle-row">
+                <div>
+                  <div style="font-weight:600;font-size:13px">Somente Premium</div>
+                  <div style="font-size:12px;color:var(--gray)">Requer assinatura Premium</div>
+                </div>
+                <label class="toggle"><input type="checkbox"><span class="slider"></span></label>
+              </div>
+              <div class="toggle-row">
+                <div>
+                  <div style="font-weight:600;font-size:13px">Disponível offline</div>
+                  <div style="font-size:12px;color:var(--gray)">Pode ser baixado para uso offline</div>
+                </div>
+                <label class="toggle"><input type="checkbox" checked><span class="slider"></span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REVENUE PAGE -->
+    <div class="page-section" id="page-revenue">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon">💰</div><div class="stat-val syne">R$407k</div><div class="stat-lbl">MRR atual</div><div class="stat-trend trend-up">▲ +14% MoM</div></div>
+        <div class="stat-card"><div class="stat-icon">📈</div><div class="stat-val syne">R$4.88M</div><div class="stat-lbl">ARR (anual)</div><div class="stat-trend trend-up">▲ Projeção 2025</div></div>
+        <div class="stat-card"><div class="stat-icon">💎</div><div class="stat-val syne">8.312</div><div class="stat-lbl">Assinantes pagantes</div><div class="stat-trend trend-up">▲ +312 este mês</div></div>
+        <div class="stat-card"><div class="stat-icon">⚡</div><div class="stat-val syne">R$48,96</div><div class="stat-lbl">ARPU médio</div><div class="stat-trend trend-up">▲ Saudável</div></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title syne">💳 Distribuição por plano</span>
+        </div>
+        <div style="padding:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+          <div style="text-align:center;padding:20px;background:var(--off);border-radius:12px">
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:40px;font-weight:800;color:var(--gray)">75.4%</div>
+            <div style="font-weight:700;margin:8px 0 4px">Free</div>
+            <div style="font-size:13px;color:var(--gray)">35.672 usuários</div>
+          </div>
+          <div style="text-align:center;padding:20px;background:var(--gold-light);border-radius:12px">
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:40px;font-weight:800;color:#92400e">17.6%</div>
+            <div style="font-weight:700;margin:8px 0 4px;color:#92400e">Premium</div>
+            <div style="font-size:13px;color:#92400e">8.312 usuários</div>
+          </div>
+          <div style="text-align:center;padding:20px;background:var(--blue-light);border-radius:12px">
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:40px;font-weight:800;color:var(--blue-mid)">7%</div>
+            <div style="font-weight:700;margin:8px 0 4px;color:var(--blue-mid)">Business</div>
+            <div style="font-size:13px;color:var(--blue-mid)">3.300 usuários</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS PAGE -->
+    <div class="page-section" id="page-settings">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div class="card">
+          <div class="card-header"><span class="card-title syne">⚙️ Configurações gerais</span></div>
+          <div style="padding:20px">
+            <div class="form-group"><label class="form-label">Nome da plataforma</label><input class="form-input" value="FrançaisExpress"></div>
+            <div class="form-group"><label class="form-label">E-mail de suporte</label><input class="form-input" value="suporte@francaisexpress.com.br"></div>
+            <div class="form-group"><label class="form-label">Moeda</label><select class="form-select"><option selected>BRL — Real Brasileiro</option><option>EUR</option><option>USD</option></select></div>
+            <button onclick="saveSettings()" class="topbar-btn primary" style="width:100%">Salvar configurações</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title syne">🔌 Integrações</span></div>
+          <div style="padding:20px">
+            <div class="toggle-row"><div><div style="font-weight:600;font-size:14px">OpenAI GPT-4o</div><div style="font-size:12px;color:var(--gray)">IA conversacional (Prof. Claire)</div></div><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="toggle-row"><div><div style="font-weight:600;font-size:14px">ElevenLabs</div><div style="font-size:12px;color:var(--gray)">Text-to-speech nativo</div></div><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="toggle-row"><div><div style="font-weight:600;font-size:14px">Stripe</div><div style="font-size:12px;color:var(--gray)">Pagamentos e assinaturas</div></div><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="toggle-row"><div><div style="font-weight:600;font-size:14px">Google OAuth</div><div style="font-size:12px;color:var(--gray)">Login com Google</div></div><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="toggle-row"><div><div style="font-weight:600;font-size:14px">Supabase</div><div style="font-size:12px;color:var(--gray)">Banco de dados e auth</div></div><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOG PAGE -->
+    <div class="page-section" id="page-blog">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title syne">📝 Artigos do Blog (24 publicados)</span>
+          <button class="action-btn" style="background:var(--blue-mid);color:white;border-color:var(--blue-mid)">+ Novo Artigo</button>
+        </div>
+        <table class="table">
+          <thead><tr><th>Título</th><th>Categoria</th><th>Visitas</th><th>Status</th><th>Data</th><th>Ações</th></tr></thead>
+          <tbody>
+            <tr><td style="font-weight:600">Como passar no TEF Canada: Guia Completo</td><td>TEF/TCF</td><td>12.400</td><td><span class="badge published">✓ Publicado</span></td><td>02/05/25</td><td><button class="action-btn">Editar</button></td></tr>
+            <tr><td style="font-weight:600">Aprenda o Joual: francês do Québec</td><td>Québec</td><td>8.700</td><td><span class="badge published">✓ Publicado</span></td><td>28/04/25</td><td><button class="action-btn">Editar</button></td></tr>
+            <tr><td style="font-weight:600">10 erros de pronúncia que brasileiros cometem</td><td>Pronúncia</td><td>6.200</td><td><span class="badge published">✓ Publicado</span></td><td>24/04/25</td><td><button class="action-btn">Editar</button></td></tr>
+            <tr><td style="font-weight:600">Verbos irregulares em francês: lista completa</td><td>Gramática</td><td>4.800</td><td><span class="badge draft">✏️ Rascunho</span></td><td>20/04/25</td><td><button class="action-btn">Editar</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- NOTIFICATION -->
+<div class="notification" id="notification"></div>
+
+<script>
+// LESSON DATA
+const lessonData = [
+  {emoji:'🙋',name:'Les Salutations',pt:'Saudações',status:'done'},
+  {emoji:'🔢',name:'Les Chiffres',pt:'Os Números',status:'done'},
+  {emoji:'🏠',name:'La Maison',pt:'A Casa',status:'done'},
+  {emoji:'👨‍👩‍👧',name:'La Famille',pt:'A Família',status:'done'},
+  {emoji:'🛒',name:'Au Marché',pt:'No Mercado',status:'active'},
+  {emoji:'🍽️',name:'Au Restaurant',pt:'No Restaurante',status:'normal'},
+  {emoji:'🚇',name:'Les Transports',pt:'Os Transportes',status:'normal'},
+  {emoji:'🌦️',name:'La Météo',pt:'O Tempo',status:'normal'},
+  {emoji:'💼',name:'Le Travail',pt:'O Trabalho',status:'normal'},
+  {emoji:'🎓',name:'L\'École',pt:'A Escola',status:'normal'},
+];
+
+const lessonsList = document.getElementById('lessons-list');
+lessonData.forEach((l,i) => {
+  lessonsList.innerHTML += `
+    <div class="lesson-list-item ${l.status==='active'?'selected':''}" onclick="selectLesson(this,'${l.name}')">
+      <span class="drag-handle">⠿</span>
+      <div class="lesson-list-icon">${l.emoji}</div>
+      <div style="flex:1">
+        <div class="lesson-list-name">${l.name}</div>
+        <div class="lesson-list-meta">${l.pt} · A1</div>
+      </div>
+      <span class="badge ${l.status==='done'?'published':l.status==='active'?'active':'free'}">${l.status==='done'?'✓':'${l.status==='active'?'●':'○'}'}</span>
+    </div>`;
+});
+
+function selectLesson(el, name) {
+  document.querySelectorAll('.lesson-list-item').forEach(i => i.classList.remove('selected'));
+  el.classList.add('selected');
+  document.querySelector('.card-title.syne').textContent = '✏️ Editar: ' + name;
+}
+
+// USER DATA
+const userData = [
+  {name:'Ana Beatriz S.',email:'ana@email.com',color:'#2563eb',plan:'premium',level:'A2',xp:'1240',streak:'47',status:'active'},
+  {name:'Rafael M.',email:'rafael@email.com',color:'#16a34a',plan:'free',level:'A1',xp:'280',streak:'12',status:'active'},
+  {name:'Camila T.',email:'camila@email.com',color:'#dc2626',plan:'premium',level:'B1',xp:'4800',streak:'89',status:'active'},
+  {name:'Pedro L.',email:'pedro@email.com',color:'#f59e0b',plan:'premium',level:'A2',xp:'2100',streak:'33',status:'active'},
+  {name:'Mariana R.',email:'mari@email.com',color:'#7c3aed',plan:'free',level:'A1',xp:'120',streak:'5',status:'inactive'},
+  {name:'Thiago S.',email:'thiago@email.com',color:'#0891b2',plan:'free',level:'A1',xp:'340',streak:'0',status:'active'},
+];
+
+const tbody = document.getElementById('users-tbody');
+function renderUsers(data) {
+  tbody.innerHTML = data.map(u => `
+    <tr>
+      <td><div class="user-cell"><div class="user-av-sm" style="background:${u.color}">${u.name[0]}</div><div><div class="user-name-sm">${u.name}</div><div class="user-email-sm">${u.email}</div></div></div></td>
+      <td><span class="badge ${u.plan}">${u.plan==='premium'?'💎 Premium':'Free'}</span></td>
+      <td>${u.level}</td>
+      <td>⚡ ${u.xp} XP</td>
+      <td>🔥 ${u.streak} dias</td>
+      <td><span class="badge ${u.status}">${u.status==='active'?'Ativo':'Inativo'}</span></td>
+      <td style="display:flex;gap:6px">
+        <button class="action-btn">Ver</button>
+        <button class="action-btn" onclick="suspendUser('${u.name}')">⛔</button>
+      </td>
+    </tr>`).join('');
+}
+renderUsers(userData);
+
+function filterUsers(q) {
+  const filtered = userData.filter(u => u.name.toLowerCase().includes(q.toLowerCase()) || u.email.toLowerCase().includes(q.toLowerCase()));
+  renderUsers(filtered);
+}
+
+// CHART
+const chartData = [42,65,38,80,72,55,90,68,85,74,92,88,76,95,82,70,88,65,91,84,78,96,88,92,85,90,78,94,88,97];
+const chart = document.getElementById('admin-chart');
+const maxVal = Math.max(...chartData);
+chartData.forEach((v,i) => {
+  const isToday = i === chartData.length-1;
+  const h = (v/maxVal)*120;
+  chart.innerHTML += `<div class="bar-col">
+    <div class="bar-fill" style="height:${h}px;${isToday?'opacity:1':'opacity:0.7'}">
+      <div class="bar-fill-tooltip">${v} usuários</div>
+    </div>
+    ${i%5===0?`<div class="bar-lbl">${i+1}</div>`:'<div class="bar-lbl"></div>'}
+  </div>`;
+});
+
+// NAV
+function showPage(page) {
+  document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  const titles = {overview:'📊 Visão Geral',users:'👥 Usuários',lessons:'📚 Editor de Lições',revenue:'💰 Receita & Assinaturas',settings:'⚙️ Configurações',blog:'📝 Blog & SEO'};
+  document.getElementById('topbar-title').textContent = titles[page] || '📊 Admin';
+  event.currentTarget?.classList.add('active');
+}
+
+function saveLesson() { showNotification('✓ Lição salva com sucesso!'); }
+function saveSettings() { showNotification('✓ Configurações salvas!'); }
+function newLesson() { showNotification('📝 Nova lição criada!'); }
+function exportData() { showNotification('⬇ Exportando dados...'); }
+function primaryAction() { saveLesson(); }
+function suspendUser(name) {
+  if(confirm('Suspender '+name+'?')) showNotification('⛔ Usuário suspenso: '+name);
+}
+
+function showNotification(msg) {
+  const n = document.getElementById('notification');
+  n.textContent = msg;
+  n.classList.add('show');
+  setTimeout(() => n.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>

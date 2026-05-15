@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meus Cursos — FrançaisExpress</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --blue:#1a3f6f;--blue-mid:#2563eb;--blue-light:#dbeafe;--blue-bright:#60a5fa;
+  --green:#16a34a;--green-light:#dcfce7;--gold:#f59e0b;--gold-light:#fef3c7;
+  --red:#dc2626;--purple:#7c3aed;--purple-light:#ede9fe;
+  --white:#fff;--off:#f8fafc;--gray:#64748b;--dark:#0f172a;
+  --border:rgba(0,0,0,0.07);--sidebar-w:260px;--radius:14px;
+}
+body{font-family:'Inter',sans-serif;background:var(--off);color:var(--dark);display:flex;min-height:100vh}
+.syne{font-family:'Plus Jakarta Sans',sans-serif}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-w);background:var(--dark);min-height:100vh;position:fixed;left:0;top:0;bottom:0;display:flex;flex-direction:column;z-index:50;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.1) transparent}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-track{background:transparent}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:3px}
+.sidebar-logo{padding:22px 20px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.logo-mark{display:flex;align-items:center;gap:10px}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,#2563eb,#60a5fa);border-radius:9px;display:flex;align-items:center;justify-content:center;color:white;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:15px}
+.logo-text{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:16px;color:white}
+.logo-text span{color:#60a5fa}
+.user-card{padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.user-av{width:38px;height:38px;background:linear-gradient(135deg,var(--blue-mid),var(--blue-bright));border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:white;flex-shrink:0}
+.user-row{display:flex;align-items:center;gap:12px}
+.user-name{color:white;font-weight:600;font-size:14px}
+.user-level{color:rgba(255,255,255,0.45);font-size:12px}
+.xp-bar-wrap{margin-top:10px}
+.xp-label{display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:5px}
+.xp-bar{height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden}
+.xp-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--blue-mid),var(--blue-bright));transition:width 1s ease}
+.sidebar-nav{flex:1;padding:16px 12px}
+.nav-section{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.25);padding:0 8px;margin-bottom:8px;margin-top:20px}
+.nav-section:first-child{margin-top:0}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:all 0.2s;color:rgba(255,255,255,0.5);font-size:14px;font-weight:500;text-decoration:none;border:none;background:none;width:100%;text-align:left}
+.nav-item:hover{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.85)}
+.nav-item.active{background:rgba(37,99,235,0.2);color:white}
+.nav-icon{font-size:17px;width:20px;text-align:center}
+.nav-badge{margin-left:auto;background:var(--blue-mid);color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px}
+.sidebar-footer{padding:14px 20px;border-top:1px solid rgba(255,255,255,0.06)}
+.streak-widget{background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2);border-radius:12px;padding:12px;display:flex;align-items:center;gap:10px}
+.streak-fire{font-size:22px}
+.streak-info strong{color:white;font-size:14px;display:block}
+.streak-info span{color:rgba(255,255,255,0.4);font-size:11px}
+
+/* MAIN */
+.main{margin-left:var(--sidebar-w);flex:1;min-width:0}
+
+/* TOPBAR */
+.topbar{background:white;border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:40}
+.page-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;color:var(--dark)}
+.page-sub{font-size:13px;color:var(--gray);margin-top:2px}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.search-input{padding:9px 16px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;background:var(--off);width:240px;transition:all 0.2s;color:var(--dark)}
+.search-input:focus{outline:none;border-color:var(--blue-mid);background:white}
+
+/* CONTENT */
+.content{padding:28px 32px;max-width:1100px}
+
+/* Level tabs */
+.level-tabs{display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap}
+.level-tab{padding:8px 20px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:white;color:var(--gray);transition:all 0.2s;font-family:'Inter',sans-serif}
+.level-tab:hover{border-color:var(--blue-mid);color:var(--blue-mid)}
+.level-tab.active{background:var(--blue-mid);color:white;border-color:var(--blue-mid)}
+.level-tab.a2{--tab-c:#2563eb}
+.level-tab.b1{--tab-c:#f59e0b}
+.level-tab.b2{--tab-c:#7c3aed}
+
+/* Level section */
+.level-section{margin-bottom:36px}
+.level-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.level-badge{padding:4px 14px;border-radius:100px;font-size:12px;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif}
+.level-badge.A1{background:var(--green-light);color:var(--green)}
+.level-badge.A2{background:var(--blue-light);color:var(--blue-mid)}
+.level-badge.B1{background:var(--gold-light);color:#92400e}
+.level-badge.B2{background:var(--purple-light);color:var(--purple)}
+.level-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:700;color:var(--dark)}
+.level-count{font-size:13px;color:var(--gray);margin-left:auto}
+
+/* Module cards */
+.modules-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.module-card{background:white;border:1.5px solid var(--border);border-radius:var(--radius);padding:18px;cursor:pointer;transition:all 0.25s;position:relative;overflow:hidden}
+.module-card:hover{transform:translateY(-3px);box-shadow:0 10px 32px rgba(0,0,0,0.09);border-color:rgba(37,99,235,0.2)}
+.module-card.active-module{border-color:var(--blue-mid);background:linear-gradient(135deg,#f8faff,white)}
+.module-emoji{font-size:32px;margin-bottom:12px;display:block}
+.module-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;color:var(--dark);margin-bottom:4px}
+.module-desc{font-size:12px;color:var(--gray);line-height:1.5;margin-bottom:12px}
+.module-meta{display:flex;align-items:center;justify-content:space-between}
+.module-lvl{font-size:11px;font-weight:700;padding:2px 8px;border-radius:100px}
+.module-lvl.A1{background:var(--green-light);color:var(--green)}
+.module-lvl.A2{background:var(--blue-light);color:var(--blue-mid)}
+.module-lvl.B1{background:var(--gold-light);color:#92400e}
+.module-lvl.B2{background:var(--purple-light);color:var(--purple)}
+.module-lessons{font-size:11px;color:var(--gray)}
+.module-progress{height:3px;background:#f1f5f9;border-radius:2px;margin-top:10px;overflow:hidden}
+.module-progress-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--blue-mid),var(--blue-bright));transition:width 0.8s ease}
+
+/* Lessons panel */
+.lessons-panel{background:white;border-radius:var(--radius);border:1.5px solid var(--border);margin-top:24px;overflow:hidden;display:none}
+.lessons-panel.open{display:block;animation:fadeUp 0.3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.panel-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.panel-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:700;color:var(--dark)}
+.panel-close{background:none;border:none;cursor:pointer;font-size:20px;color:var(--gray);line-height:1;padding:4px}
+.panel-close:hover{color:var(--dark)}
+.lessons-list{padding:8px}
+.lesson-row{display:flex;align-items:center;gap:14px;padding:13px 14px;border-radius:10px;cursor:pointer;transition:all 0.2s;border:1.5px solid transparent}
+.lesson-row:hover{background:var(--off);border-color:var(--border)}
+.lesson-icon{width:40px;height:40px;border-radius:10px;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.lesson-icon.done{background:var(--green-light)}
+.lesson-meta{flex:1;min-width:0}
+.lesson-name{font-size:14px;font-weight:600;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lesson-type{font-size:12px;color:var(--gray);margin-top:2px}
+.lesson-progress-bar{height:3px;background:#f1f5f9;border-radius:2px;margin-top:6px;overflow:hidden;width:100%}
+.lesson-progress-fill{height:100%;background:linear-gradient(90deg,var(--blue-mid),var(--blue-bright));border-radius:2px}
+.lesson-status{font-size:12px;font-weight:600;flex-shrink:0}
+.lesson-status.done{color:var(--green)}
+.lesson-status.progress{color:var(--blue-mid)}
+.lesson-status.new{color:var(--gray)}
+.start-btn{display:flex;align-items:center;gap:8px;background:var(--blue-mid);color:white;border:none;border-radius:10px;padding:11px 20px;font-size:14px;font-weight:600;cursor:pointer;margin:14px;font-family:'Inter',sans-serif;transition:all 0.2s;width:calc(100% - 28px);justify-content:center}
+.start-btn:hover{background:var(--blue)}
+
+/* Empty state */
+.empty{text-align:center;padding:40px 20px;color:var(--gray)}
+.empty-icon{font-size:40px;margin-bottom:12px}
+.empty-text{font-size:15px;font-weight:600;color:var(--dark);margin-bottom:6px}
+.empty-sub{font-size:13px}
+
+/* Loading */
+.loading{text-align:center;padding:60px 20px;color:var(--gray);font-size:14px}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">
+      <div class="logo-icon">F</div>
+      <div class="logo-text">Français<span>Express</span></div>
+    </div>
+  </div>
+  <div class="user-card">
+    <div class="user-row">
+      <div class="user-av" id="sb-avatar">?</div>
+      <div>
+        <div class="user-name" id="sb-name">—</div>
+        <div class="user-level" id="sb-level">Nível A1</div>
+      </div>
+    </div>
+    <div class="xp-bar-wrap">
+      <div class="xp-label"><span id="sb-xp">0 XP</span><span id="sb-xp-next">500 XP</span></div>
+      <div class="xp-bar"><div class="xp-fill" id="sb-xp-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Aprendizado</div>
+    <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span>Dashboard</a>
+    <a href="courses.html" class="nav-item active"><span class="nav-icon">📚</span>Meus Cursos</a>
+    <div class="nav-section">Praticar</div>
+    <a href="chat.html" class="nav-item"><span class="nav-icon">🤖</span>Chat com IA</a>
+    <a href="pronunciation.html" class="nav-item"><span class="nav-icon">🎤</span>Lab de Pronúncia</a>
+    <a href="#" class="nav-item"><span class="nav-icon">🎵</span>Flashcards</a>
+    <div class="nav-section">Conta</div>
+    <a href="profile.html" class="nav-item"><span class="nav-icon">🏆</span>Conquistas</a>
+    <a href="profile.html" class="nav-item"><span class="nav-icon">👤</span>Perfil</a>
+    <a href="settings.html" class="nav-item"><span class="nav-icon">⚙️</span>Configurações</a>
+    <a href="pricing.html" class="nav-item"><span class="nav-icon">💎</span>Upgrade Premium</a>
+    <a onclick="window.supabaseLogout && window.supabaseLogout()" class="nav-item" style="color:rgba(255,100,100,0.7);cursor:pointer;margin-top:4px"><span class="nav-icon">🚪</span>Sair</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="streak-widget">
+      <span class="streak-fire">🔥</span>
+      <div class="streak-info">
+        <strong id="sb-streak">0 dias de streak!</strong>
+        <span>Continue assim 💪</span>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div>
+      <div class="page-title syne">📚 Meus Cursos</div>
+      <div class="page-sub" id="courses-sub">Carregando módulos...</div>
+    </div>
+    <div class="topbar-right">
+      <input class="search-input" type="text" placeholder="🔍 Buscar módulo..." oninput="filterModules(this.value)">
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- Level tabs -->
+    <div class="level-tabs">
+      <button class="level-tab active" onclick="filterLevel('all',this)">Todos</button>
+      <button class="level-tab" onclick="filterLevel('A1',this)">🟢 A1 — Iniciante</button>
+      <button class="level-tab" onclick="filterLevel('A2',this)">🔵 A2 — Básico</button>
+      <button class="level-tab" onclick="filterLevel('B1',this)">🟡 B1 — Intermediário</button>
+      <button class="level-tab" onclick="filterLevel('B2',this)">🟣 B2 — Avançado</button>
+    </div>
+
+    <!-- Modules by level -->
+    <div id="modules-container">
+      <div class="loading">⏳ Carregando módulos...</div>
+    </div>
+
+    <!-- Lessons panel -->
+    <div class="lessons-panel" id="lessons-panel">
+      <div class="panel-header">
+        <div class="panel-title" id="panel-title">Lições</div>
+        <button class="panel-close" onclick="closePanel()">✕</button>
+      </div>
+      <div id="panel-lessons"></div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+const supabase = createClient(
+  'https://hswdkvuuwoqvcjfhvhyb.supabase.co',
+  'sb_publishable_z7p21rI4XJajkmkm3fMETg_3HUCi4P9'
+)
+
+const { data: { user } } = await supabase.auth.getUser()
+const localOk = JSON.parse(localStorage.getItem('fe_onboarding') || '{}').done
+if (!user && !localOk) { window.location.href = '../index.html' }
+
+// Load profile
+if (user) {
+  const { data: p } = await supabase.from('profiles').select('*').eq('id', user.id).single()
+  if (p) {
+    const firstName = p.full_name?.split(' ')[0] || user.email?.split('@')[0] || 'Aluno'
+    document.getElementById('sb-avatar').textContent = firstName[0].toUpperCase()
+    document.getElementById('sb-name').textContent = p.full_name || firstName
+    const lvlLabels = { A1:'Iniciante', A2:'Élémentaire', B1:'Intermédiaire', B2:'Avancé' }
+    document.getElementById('sb-level').textContent = `Nível ${p.current_level || 'A1'} · ${lvlLabels[p.current_level] || ''}`
+    const xp = p.xp_total || 0
+    const xpNext = Math.ceil((xp + 1) / 500) * 500
+    document.getElementById('sb-xp').textContent = xp + ' XP'
+    document.getElementById('sb-xp-next').textContent = xpNext + ' XP'
+    document.getElementById('sb-xp-fill').style.width = Math.min(100, Math.round((xp % 500) / 500 * 100)) + '%'
+    document.getElementById('sb-streak').textContent = `${p.streak_current || 0} dias de streak!`
+  }
+}
+
+// Load all modules + progress
+const [{ data: modules }, { data: allProgress }] = await Promise.all([
+  supabase.from('modules').select('*').eq('is_active', true).order('level').order('order_index'),
+  user ? supabase.from('user_progress').select('*').eq('user_id', user.id) : { data: [] }
+])
+
+// Load lesson counts per module
+const { data: lessons } = await supabase.from('lessons').select('id, module_id, title, title_pt, lesson_type, order_index, xp_reward, duration_minutes').eq('is_active', true).order('order_index')
+
+window._allModules = modules || []
+window._allLessons = lessons || []
+window._allProgress = allProgress || []
+window._currentLevel = 'all'
+
+const progressMap = {}
+allProgress?.forEach(p => { progressMap[p.lesson_id] = p })
+window._progressMap = progressMap
+
+// Count per module
+const lessonsByModule = {}
+const completedByModule = {}
+lessons?.forEach(l => {
+  if (!lessonsByModule[l.module_id]) lessonsByModule[l.module_id] = []
+  lessonsByModule[l.module_id].push(l)
+  if (!completedByModule[l.module_id]) completedByModule[l.module_id] = 0
+  if (progressMap[l.id]?.status === 'completed') completedByModule[l.module_id]++
+})
+window._lessonsByModule = lessonsByModule
+window._completedByModule = completedByModule
+
+const total = modules?.length || 0
+document.getElementById('courses-sub').textContent = `${total} módulos disponíveis · Clique para ver as lições`
+
+renderModules(modules || [], 'all')
+
+window.supabaseLogout = async () => {
+  await supabase.auth.signOut()
+  window.location.href = '../index.html'
+}
+
+// Load lessons for a module
+window.openModule = async function(moduleId, moduleName) {
+  const panel = document.getElementById('lessons-panel')
+  const panelTitle = document.getElementById('panel-title')
+  const panelLessons = document.getElementById('panel-lessons')
+
+  panelTitle.textContent = moduleName
+  panelLessons.innerHTML = '<div class="loading">⏳ Carregando lições...</div>'
+  panel.classList.add('open')
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+
+  // Mark active module
+  document.querySelectorAll('.module-card').forEach(c => c.classList.remove('active-module'))
+  document.querySelector(`[data-module-id="${moduleId}"]`)?.classList.add('active-module')
+
+  const moduleLessons = window._lessonsByModule[moduleId] || []
+  const typeLabels = { vocabulary:'Vocabulário', dialogue:'Diálogo', grammar:'Gramática', quiz:'Quiz', pronunciation:'Pronúncia', listening:'Audição' }
+  const typeIcons  = { vocabulary:'📖', dialogue:'💬', grammar:'📝', quiz:'🎯', pronunciation:'🎤', listening:'👂' }
+
+  if (!moduleLessons.length) {
+    panelLessons.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">📭</div>
+        <div class="empty-text">Nenhuma lição ainda</div>
+        <div class="empty-sub">Este módulo está sendo preparado. Em breve!</div>
+      </div>`
+    return
+  }
+
+  let firstNotDone = null
+  const html = moduleLessons.map(l => {
+    const prog = window._progressMap[l.id]
+    const isDone = prog?.status === 'completed'
+    const isActive = prog?.status === 'in_progress'
+    const score = prog?.score_percent || 0
+    if (!isDone && !firstNotDone) firstNotDone = l
+    return `
+      <div class="lesson-row" onclick="window.location.href='lesson.html?id=${l.id}'">
+        <div class="lesson-icon ${isDone ? 'done' : ''}">${typeIcons[l.lesson_type] || '📖'}</div>
+        <div class="lesson-meta">
+          <div class="lesson-name">${l.title} — ${l.title_pt}</div>
+          <div class="lesson-type">${typeLabels[l.lesson_type] || ''} · ${l.duration_minutes} min · +${l.xp_reward} XP</div>
+          <div class="lesson-progress-bar">
+            <div class="lesson-progress-fill" style="width:${isDone ? 100 : isActive ? score : 0}%"></div>
+          </div>
+        </div>
+        <div class="lesson-status ${isDone ? 'done' : isActive ? 'progress' : 'new'}">
+          ${isDone ? '✓' : isActive ? score + '%' : '→'}
+        </div>
+      </div>`
+  }).join('')
+
+  panelLessons.innerHTML = html
+  if (firstNotDone) {
+    panelLessons.innerHTML += `
+      <button class="start-btn" onclick="window.location.href='lesson.html?id=${firstNotDone.id}'">
+        ▶ ${firstNotDone.title_pt === moduleLessons[0].title_pt ? 'Começar módulo' : 'Continuar'} — ${firstNotDone.title_pt}
+      </button>`
+  }
+}
+</script>
+
+<script>
+const levelColors = { A1:'#16a34a', A2:'#2563eb', B1:'#f59e0b', B2:'#7c3aed' }
+const levelNames  = { A1:'A1 — Iniciante', A2:'A2 — Básico', B1:'B1 — Intermediário', B2:'B2 — Avançado' }
+
+function renderModules(modules, level) {
+  const container = document.getElementById('modules-container')
+  const grouped = {}
+  modules.forEach(m => {
+    if (level !== 'all' && m.level !== level) return
+    if (!grouped[m.level]) grouped[m.level] = []
+    grouped[m.level].push(m)
+  })
+
+  const levelOrder = ['A1','A2','B1','B2']
+  const filtered = levelOrder.filter(l => grouped[l])
+
+  if (!filtered.length) {
+    container.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div><div class="empty-text">Nenhum módulo encontrado</div></div>'
+    return
+  }
+
+  container.innerHTML = filtered.map(lvl => {
+    const mods = grouped[lvl]
+    return `
+      <div class="level-section" id="section-${lvl}">
+        <div class="level-header">
+          <span class="level-badge ${lvl}">${lvl}</span>
+          <span class="level-title syne">${levelNames[lvl]}</span>
+          <span class="level-count">${mods.length} módulos</span>
+        </div>
+        <div class="modules-grid">
+          ${mods.map(m => {
+            const total = (window._lessonsByModule?.[m.id] || []).length
+            const done  = window._completedByModule?.[m.id] || 0
+            const pct   = total > 0 ? Math.round(done / total * 100) : 0
+            return `
+              <div class="module-card" data-module-id="${m.id}" data-name="${m.title_pt}" data-level="${m.level}"
+                   onclick="openModule('${m.id}','${m.title_pt}')">
+                <span class="module-emoji">${m.icon}</span>
+                <div class="module-name syne">${m.title_pt}</div>
+                <div class="module-desc">${m.description_pt || ''}</div>
+                <div class="module-meta">
+                  <span class="module-lvl ${m.level}">${m.level}</span>
+                  <span class="module-lessons">${total > 0 ? total + ' lições' : 'Em breve'}</span>
+                </div>
+                ${total > 0 ? `
+                  <div class="module-progress">
+                    <div class="module-progress-fill" style="width:${pct}%;background:${done===total && total>0 ? '#16a34a' : 'linear-gradient(90deg,#2563eb,#60a5fa)'}"></div>
+                  </div>` : ''}
+              </div>`
+          }).join('')}
+        </div>
+      </div>`
+  }).join('')
+}
+
+function filterLevel(level, btn) {
+  window._currentLevel = level
+  document.querySelectorAll('.level-tab').forEach(t => t.classList.remove('active'))
+  btn.classList.add('active')
+  closePanel()
+  renderModules(window._allModules || [], level)
+}
+
+function filterModules(q) {
+  const filtered = (window._allModules || []).filter(m =>
+    m.title_pt.toLowerCase().includes(q.toLowerCase()) ||
+    (m.description_pt || '').toLowerCase().includes(q.toLowerCase())
+  )
+  renderModules(filtered, 'all')
+  closePanel()
+}
+
+function closePanel() {
+  document.getElementById('lessons-panel').classList.remove('open')
+  document.querySelectorAll('.module-card').forEach(c => c.classList.remove('active-module'))
+}
+</script>
+</body>
+</html>

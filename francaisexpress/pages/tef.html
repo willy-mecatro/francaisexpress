@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado TEF — FrançaisExpress</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --blue:#1a3f6f;--blue-mid:#2563eb;--blue-light:#dbeafe;--blue-bright:#60a5fa;
+  --red:#dc2626;--red-light:#fee2e2;--green:#16a34a;--green-light:#dcfce7;
+  --gold:#f59e0b;--gold-light:#fef3c7;--purple:#7c3aed;--purple-light:#ede9fe;
+  --white:#fff;--off:#f8fafc;--gray:#64748b;--dark:#0f172a;
+  --border:rgba(0,0,0,0.07);--sidebar-w:260px;--radius:14px;
+}
+body{font-family:'Inter',sans-serif;background:var(--off);color:var(--dark);display:flex;min-height:100vh}
+.syne{font-family:'Plus Jakarta Sans',sans-serif}
+
+/* ── SIDEBAR (identique au dashboard) ── */
+.sidebar{width:var(--sidebar-w);background:var(--dark);min-height:100vh;position:fixed;left:0;top:0;bottom:0;display:flex;flex-direction:column;padding:0;z-index:50;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.1) transparent}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:3px}
+.sidebar-logo{padding:24px 20px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.logo-mark{display:flex;align-items:center;gap:10px}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#2563eb,#60a5fa);border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:16px}
+.logo-text{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:17px;color:white}
+.logo-text span{color:#60a5fa}
+.user-card{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.user-av{width:40px;height:40px;background:linear-gradient(135deg,var(--blue-mid),var(--blue-bright));border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:white;flex-shrink:0}
+.user-row{display:flex;align-items:center;gap:12px}
+.user-name{color:white;font-weight:600;font-size:14px}
+.user-level{color:rgba(255,255,255,0.45);font-size:12px}
+.xp-bar-wrap{margin-top:10px}
+.xp-label{display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:5px}
+.xp-bar{height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden}
+.xp-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--blue-mid),var(--blue-bright));transition:width 1s ease}
+.sidebar-nav{flex:1;padding:16px 12px}
+.nav-section{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.25);padding:0 8px;margin-bottom:8px;margin-top:20px}
+.nav-section:first-child{margin-top:0}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:all 0.2s;color:rgba(255,255,255,0.5);font-size:14px;font-weight:500;text-decoration:none;border:none;background:none;width:100%;text-align:left}
+.nav-item:hover{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.85)}
+.nav-item.active{background:rgba(37,99,235,0.2);color:white}
+.nav-icon{font-size:18px;width:20px;text-align:center}
+.sidebar-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.06)}
+.streak-widget{background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2);border-radius:12px;padding:12px;display:flex;align-items:center;gap:10px}
+.streak-info strong{color:white;font-size:14px;display:block}
+.streak-info span{color:rgba(255,255,255,0.4);font-size:11px}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sidebar-w);flex:1;min-width:0;display:flex;flex-direction:column;min-height:100vh}
+
+/* ── TOPBAR ── */
+.topbar{background:white;border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:40;flex-shrink:0}
+.topbar-left h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;color:var(--dark)}
+.topbar-left p{font-size:13px;color:var(--gray);margin-top:2px}
+.timer-badge{display:none;align-items:center;gap:8px;padding:8px 18px;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;background:var(--gold-light);color:#92400e}
+.timer-badge.urgent{background:var(--red-light);color:var(--red)}
+
+/* ── VIEWS ── */
+.view{display:none;flex:1;overflow-y:auto}
+.view.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── HOME VIEW ── */
+.home-content{padding:28px 32px;max-width:100%}
+
+.tef-hero{background:linear-gradient(135deg,#1a3f6f 0%,#2563eb 60%,#3b82f6 100%);border-radius:20px;padding:36px 40px;color:white;margin-bottom:28px;position:relative;overflow:hidden}
+.tef-hero::before{content:'';position:absolute;top:-80px;right:-80px;width:280px;height:280px;background:rgba(255,255,255,0.06);border-radius:50%;pointer-events:none}
+.tef-hero::after{content:'';position:absolute;bottom:-60px;right:120px;width:180px;height:180px;background:rgba(255,255,255,0.04);border-radius:50%;pointer-events:none}
+.hero-grid{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;gap:32px}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);padding:5px 14px;border-radius:100px;font-size:12px;font-weight:700;letter-spacing:0.5px;margin-bottom:14px}
+.hero-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:30px;font-weight:800;line-height:1.15;margin-bottom:10px}
+.hero-desc{font-size:14px;opacity:0.82;line-height:1.65;margin-bottom:22px;max-width:480px}
+.hero-kpis{display:flex;gap:28px;margin-bottom:24px}
+.kpi span{font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:800;display:block}
+.kpi small{font-size:11px;opacity:0.6;margin-top:2px}
+.hero-cta{display:inline-flex;align-items:center;gap:8px;background:white;color:var(--blue-mid);padding:12px 26px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;border:none;transition:all 0.2s;font-family:'Plus Jakarta Sans',sans-serif}
+.hero-cta:hover{background:var(--blue-light);transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,0.15)}
+.hero-emoji{font-size:90px;line-height:1;opacity:0.9;user-select:none}
+
+/* Module cards */
+.modules-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.mod-card{background:white;border:1.5px solid var(--border);border-radius:var(--radius);padding:22px;cursor:pointer;transition:all 0.25s;position:relative}
+.mod-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--radius) var(--radius) 0 0;transition:opacity 0.2s}
+.mod-card.oral::after{background:var(--blue-mid)}
+.mod-card.lecture::after{background:var(--green)}
+.mod-card.expression::after{background:var(--gold)}
+.mod-card.oral-expr::after{background:var(--purple)}
+.mod-card:hover{transform:translateY(-3px);box-shadow:0 10px 32px rgba(0,0,0,0.08)}
+.mod-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.mod-ico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.mod-ico.oral{background:var(--blue-light)}
+.mod-ico.lecture{background:var(--green-light)}
+.mod-ico.expression{background:var(--gold-light)}
+.mod-ico.oral-expr{background:var(--purple-light)}
+.mod-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:700;color:var(--dark)}
+.mod-sub{font-size:12px;color:var(--gray)}
+.mod-desc{font-size:13px;color:var(--gray);line-height:1.55;margin-bottom:16px}
+.mod-footer{display:flex;align-items:center;justify-content:space-between}
+.mod-pills{display:flex;gap:10px}
+.mod-pill{font-size:11px;color:var(--gray);display:flex;align-items:center;gap:4px}
+.mod-btn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all 0.2s;font-family:'Inter',sans-serif}
+.mod-btn.oral{background:var(--blue-light);color:var(--blue-mid)}
+.mod-btn.oral:hover{background:var(--blue-mid);color:white}
+.mod-btn.lecture{background:var(--green-light);color:var(--green)}
+.mod-btn.lecture:hover{background:var(--green);color:white}
+.mod-btn.expression{background:var(--gold-light);color:#92400e}
+.mod-btn.expression:hover{background:var(--gold);color:white}
+.mod-btn.oral-expr{background:var(--purple-light);color:var(--purple)}
+.mod-btn.oral-expr:hover{background:var(--purple);color:white}
+
+/* CLB table */
+.clb-card{background:white;border:1.5px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:8px}
+.clb-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:700;margin-bottom:16px}
+.clb-table{width:100%;border-collapse:collapse;font-size:13px}
+.clb-table th{background:var(--dark);color:white;padding:10px 14px;text-align:left;font-weight:600;font-size:12px}
+.clb-table td{padding:10px 14px;border-bottom:1px solid var(--border)}
+.clb-table tr:last-child td{border:none}
+.clb-table tr:nth-child(even) td{background:var(--off)}
+.clb-table tr.highlight td{background:#f0fdf4}
+.badge{display:inline-block;padding:2px 10px;border-radius:100px;font-size:11px;font-weight:700}
+
+/* ── SIM VIEW ── */
+.sim-bar{background:white;border-bottom:1px solid var(--border);padding:10px 32px;flex-shrink:0}
+.sim-bar-inner{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.sim-bar-label{font-size:13px;color:var(--gray)}
+.sim-bar-track{height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden}
+.sim-bar-fill{height:100%;background:linear-gradient(90deg,var(--blue-mid),var(--blue-bright));border-radius:3px;transition:width 0.4s ease}
+
+.sim-body{flex:1;overflow-y:auto;padding:28px 32px}
+.sim-inner{max-width:760px;margin:0 auto}
+
+.q-wrap{background:white;border-radius:var(--radius);border:1.5px solid var(--border);padding:28px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.q-module-tag{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:14px}
+.q-num{font-size:12px;color:var(--gray);margin-bottom:8px;font-weight:600}
+.q-text{font-size:17px;font-weight:600;color:var(--dark);line-height:1.6;margin-bottom:20px}
+
+/* Audio box */
+.audio-box{display:flex;align-items:center;gap:14px;background:var(--off);border-radius:12px;padding:14px 18px;margin-bottom:20px;border:1px solid var(--border)}
+.audio-btn{width:44px;height:44px;border-radius:50%;background:var(--blue-mid);color:white;border:none;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s}
+.audio-btn:hover{background:var(--blue);transform:scale(1.05)}
+.audio-info strong{display:block;font-size:14px;font-weight:600;color:var(--dark)}
+.audio-info span{font-size:12px;color:var(--gray)}
+
+/* Context box */
+.context-box{background:var(--off);border-radius:12px;padding:16px 20px;margin-bottom:20px;border:1px solid var(--border);font-size:14px;line-height:1.75;color:var(--dark);white-space:pre-wrap}
+
+/* Options */
+.options{display:flex;flex-direction:column;gap:10px}
+.opt-btn{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:10px;border:1.5px solid var(--border);background:white;text-align:left;font-size:14px;font-weight:500;cursor:pointer;transition:all 0.2s;color:var(--dark);font-family:'Inter',sans-serif;width:100%}
+.opt-btn:hover:not(:disabled){border-color:var(--blue-mid);background:var(--blue-light);color:var(--blue-mid)}
+.opt-btn.selected{border-color:var(--blue-mid);background:var(--blue-light);color:var(--blue-mid)}
+.opt-btn.correct{border-color:var(--green);background:var(--green-light);color:var(--green)}
+.opt-btn.wrong{border-color:var(--red);background:var(--red-light);color:var(--red)}
+.opt-letter{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;flex-shrink:0}
+
+/* Writing */
+.writing-meta{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.w-tag{padding:4px 12px;border-radius:100px;font-size:12px;font-weight:700}
+.w-textarea{width:100%;min-height:150px;padding:14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;resize:vertical;transition:border 0.2s;color:var(--dark);line-height:1.65}
+.w-textarea:focus{outline:none;border-color:var(--blue-mid)}
+.w-stats{display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:var(--gray)}
+.w-hints{background:var(--gold-light);border-radius:10px;padding:14px 16px;margin-top:14px}
+.w-hints strong{font-size:12px;color:#92400e;display:block;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px}
+.w-hint{font-size:13px;color:#78350f;margin-bottom:4px}
+
+/* Oral */
+.oral-card{text-align:center;padding:28px;background:var(--purple-light);border-radius:12px;margin-top:16px}
+.oral-tips{text-align:left;background:white;border-radius:10px;padding:16px;margin-top:16px}
+.oral-tip{font-size:13px;color:var(--dark);margin-bottom:6px;display:flex;gap:8px}
+
+/* Nav */
+.sim-nav{display:flex;gap:12px;justify-content:space-between;padding-top:20px;border-top:1px solid var(--border);margin-bottom:32px}
+.btn-prev{padding:11px 24px;border-radius:10px;border:1.5px solid var(--border);background:white;font-size:14px;font-weight:600;cursor:pointer;color:var(--dark);transition:all 0.2s;font-family:'Inter',sans-serif}
+.btn-prev:hover{border-color:var(--blue-mid);color:var(--blue-mid)}
+.btn-next{padding:11px 28px;border-radius:10px;border:none;background:var(--blue-mid);font-size:14px;font-weight:700;cursor:pointer;color:white;transition:all 0.2s;font-family:'Plus Jakarta Sans',sans-serif}
+.btn-next:hover{background:var(--blue);transform:translateY(-1px)}
+.btn-finish{background:var(--green)}
+.btn-finish:hover{background:#15803d}
+
+/* ── RESULT VIEW ── */
+.result-body{flex:1;overflow-y:auto;padding:28px 32px}
+.result-inner{max-width:760px;margin:0 auto}
+.result-hero{background:linear-gradient(135deg,#1a3f6f,#2563eb);border-radius:20px;padding:36px;color:white;text-align:center;margin-bottom:20px}
+.result-emoji{font-size:56px;margin-bottom:14px}
+.result-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;margin-bottom:6px}
+.result-sub{font-size:15px;opacity:0.8;margin-bottom:24px}
+.score-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.score-box{background:rgba(255,255,255,0.12);border-radius:12px;padding:14px;text-align:center}
+.score-num{font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;display:block}
+.score-lbl{font-size:11px;opacity:0.7;margin-top:3px}
+.score-clb{font-size:12px;margin-top:6px;opacity:0.85;font-weight:600}
+.detail-card{background:white;border:1.5px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:16px}
+.detail-row{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--border)}
+.detail-row:last-child{border:none}
+.detail-name{font-size:14px;font-weight:500;min-width:130px}
+.detail-bar{flex:1;height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden}
+.detail-fill{height:100%;border-radius:3px;transition:width 1s ease}
+.detail-score{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;min-width:60px;text-align:right}
+.tips-card{background:var(--blue-light);border-radius:var(--radius);padding:20px;margin-bottom:20px}
+.tips-card h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;color:var(--blue-mid);margin-bottom:12px}
+.tip-row{font-size:13px;color:var(--blue);margin-bottom:7px;display:flex;gap:8px;line-height:1.5}
+.result-btns{display:flex;gap:12px}
+.r-btn{flex:1;padding:13px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;border:none;transition:all 0.2s;font-family:'Plus Jakarta Sans',sans-serif}
+</style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">
+      <div class="logo-icon">F</div>
+      <div class="logo-text">Français<span>Express</span></div>
+    </div>
+  </div>
+  <div class="user-card">
+    <div class="user-row">
+      <div class="user-av" id="sb-av">?</div>
+      <div><div class="user-name" id="sb-name">—</div><div class="user-level" id="sb-level">A1 · Iniciante</div></div>
+    </div>
+    <div class="xp-bar-wrap">
+      <div class="xp-label"><span id="sb-xp">0 XP</span><span id="sb-xp-next">500 XP</span></div>
+      <div class="xp-bar"><div class="xp-fill" id="sb-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Aprendizado</div>
+    <button class="nav-item" onclick="location.href='dashboard.html'"><span class="nav-icon">🏠</span>Dashboard</button>
+    <button class="nav-item" onclick="location.href='courses.html'"><span class="nav-icon">📚</span>Meus Cursos</button>
+    <button class="nav-item active"><span class="nav-icon">📋</span>Simulado TEF/TCF</button>
+    <div class="nav-section">Praticar</div>
+    <button class="nav-item" onclick="location.href='chat.html'"><span class="nav-icon">🤖</span>Chat com IA</button>
+    <button class="nav-item" onclick="location.href='pronunciation.html'"><span class="nav-icon">🎤</span>Lab de Pronúncia</button>
+    <div class="nav-section">Conta</div>
+    <button class="nav-item" onclick="location.href='profile.html'"><span class="nav-icon">👤</span>Perfil</button>
+    <button class="nav-item" onclick="location.href='settings.html'"><span class="nav-icon">⚙️</span>Configurações</button>
+    <button class="nav-item" onclick="doLogout()" style="color:rgba(255,100,100,0.7)"><span class="nav-icon">🚪</span>Sair</button>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="streak-widget">
+      <span style="font-size:22px">🔥</span>
+      <div class="streak-info"><strong id="sb-streak">0 dias!</strong><span>Continue assim 💪</span></div>
+    </div>
+  </div>
+</aside>
+
+<!-- ── MAIN ── -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1 id="topbar-h1">📋 Simulado TEF Canadá</h1>
+      <p id="topbar-p">Prepare-se para o exame de imigração</p>
+    </div>
+    <div class="timer-badge" id="timer">⏱️ <span id="timer-txt">00:00</span></div>
+  </div>
+
+  <!-- VIEW: HOME -->
+  <div class="view active" id="v-home">
+    <div class="home-content">
+
+      <div class="tef-hero">
+        <div class="hero-grid">
+          <div>
+            <div class="hero-tag">🇨🇦 TEF CANADÁ — SIMULADO OFICIAL</div>
+            <div class="hero-title syne">Prepare-se para o<br>exame que muda sua vida</div>
+            <div class="hero-desc">Simulado completo com os 4 módulos do TEF Canadá. Questões carregadas do banco de dados, pontuação CLB automática e feedback detalhado.</div>
+            <div class="hero-kpis">
+              <div class="kpi"><span id="total-qs">—</span><small>Questões</small></div>
+              <div class="kpi"><span>4</span><small>Módulos</small></div>
+              <div class="kpi"><span>CLB</span><small>Score auto</small></div>
+              <div class="kpi"><span>~90min</span><small>Duração</small></div>
+            </div>
+            <button class="hero-cta" onclick="startFull()">▶ Iniciar Simulado Completo</button>
+          </div>
+          <div class="hero-emoji">🎯</div>
+        </div>
+      </div>
+
+      <div class="modules-grid" id="mod-grid">
+        <div class="mod-card oral">
+          <div class="mod-head"><div class="mod-ico oral">👂</div><div><div class="mod-name syne">Compréhension Orale</div><div class="mod-sub">Compreensão Auditiva</div></div></div>
+          <div class="mod-desc">Ouça diálogos autênticos e responda questões de múltipla escolha com sotaque canadense e francês europeu.</div>
+          <div class="mod-footer">
+            <div class="mod-pills">
+              <span class="mod-pill">⏱️ <strong>40 min</strong></span>
+              <span class="mod-pill">❓ <strong id="cnt-oral">—</strong> questões</span>
+              <span class="mod-pill">📊 Max 360 pts</span>
+            </div>
+            <button class="mod-btn oral" onclick="startMod('oral')">Praticar →</button>
+          </div>
+        </div>
+        <div class="mod-card lecture">
+          <div class="mod-head"><div class="mod-ico lecture">📖</div><div><div class="mod-name syne">Compréhension Écrite</div><div class="mod-sub">Compreensão Escrita</div></div></div>
+          <div class="mod-desc">Leia textos autênticos — artigos, emails, anúncios — e demonstre sua compreensão escrita em francês.</div>
+          <div class="mod-footer">
+            <div class="mod-pills">
+              <span class="mod-pill">⏱️ <strong>60 min</strong></span>
+              <span class="mod-pill">❓ <strong id="cnt-lecture">—</strong> questões</span>
+              <span class="mod-pill">📊 Max 300 pts</span>
+            </div>
+            <button class="mod-btn lecture" onclick="startMod('lecture')">Praticar →</button>
+          </div>
+        </div>
+        <div class="mod-card expression">
+          <div class="mod-head"><div class="mod-ico expression">✍️</div><div><div class="mod-name syne">Expression Écrite</div><div class="mod-sub">Expressão Escrita</div></div></div>
+          <div class="mod-desc">Redija textos formais e informais. Avaliado por coerência, vocabulário e gramática.</div>
+          <div class="mod-footer">
+            <div class="mod-pills">
+              <span class="mod-pill">⏱️ <strong>60 min</strong></span>
+              <span class="mod-pill">✍️ <strong id="cnt-expression">—</strong> tarefas</span>
+              <span class="mod-pill">📊 Max 450 pts</span>
+            </div>
+            <button class="mod-btn expression" onclick="startMod('expression')">Praticar →</button>
+          </div>
+        </div>
+        <div class="mod-card oral-expr">
+          <div class="mod-head"><div class="mod-ico oral-expr">🎤</div><div><div class="mod-name syne">Expression Orale</div><div class="mod-sub">Expressão Oral</div></div></div>
+          <div class="mod-desc">Converse com um examinador por 12-15 minutos com tarefas de descrição, opinião e jogo de papel.</div>
+          <div class="mod-footer">
+            <div class="mod-pills">
+              <span class="mod-pill">⏱️ <strong>15 min</strong></span>
+              <span class="mod-pill">💬 <strong id="cnt-oral-expr">—</strong> tarefas</span>
+              <span class="mod-pill">📊 Max 450 pts</span>
+            </div>
+            <button class="mod-btn oral-expr" onclick="startMod('oral-expr')">Praticar →</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="clb-card">
+        <div class="clb-title syne">📊 Pontuação CLB mínima — Express Entry (FSW)</div>
+        <table class="clb-table">
+          <thead><tr><th>CLB</th><th>Comp. Orale</th><th>Comp. Écrite</th><th>Expr. Écrite</th><th>Expr. Orale</th><th>Imigração</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge" style="background:#fee2e2;color:#dc2626">CLB 4-6</span></td><td>145–248</td><td>121–206</td><td>181–309</td><td>181–309</td><td style="color:var(--red);font-weight:700">✗ Insuficiente</td></tr>
+            <tr class="highlight"><td><span class="badge" style="background:var(--blue-light);color:var(--blue-mid)">CLB 7 ⭐</span></td><td><strong>249–279</strong></td><td><strong>207–232</strong></td><td><strong>310–348</strong></td><td><strong>310–348</strong></td><td style="color:var(--green);font-weight:700">✓ FSW mínimo</td></tr>
+            <tr><td><span class="badge" style="background:var(--green-light);color:var(--green)">CLB 8</span></td><td>280–309</td><td>233–257</td><td>349–387</td><td>349–387</td><td style="color:var(--green);font-weight:600">✓ Bom</td></tr>
+            <tr><td><span class="badge" style="background:var(--gold-light);color:#92400e">CLB 9+</span></td><td>310–360</td><td>258–300</td><td>388–450</td><td>388–450</td><td style="color:var(--green);font-weight:700">✓ Excelente</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:12px;font-size:12px;color:var(--gray);background:var(--off);padding:10px 14px;border-radius:8px">💡 <strong>FSW</strong> = Federal Skilled Worker — programa mais comum do Express Entry. Exige <strong>CLB 7 mínimo</strong> em todos os 4 módulos.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW: SIMULATION -->
+  <div class="view" id="v-sim">
+    <div class="sim-bar">
+      <div class="sim-bar-inner">
+        <div class="sim-bar-label" id="sim-lbl">Questão 1 de 10</div>
+        <div class="sim-bar-label" id="sim-mod-lbl" style="font-weight:600"></div>
+      </div>
+      <div class="sim-bar-track"><div class="sim-bar-fill" id="sim-fill" style="width:0%"></div></div>
+    </div>
+    <div class="sim-body">
+      <div class="sim-inner">
+        <div id="q-area"></div>
+        <div class="sim-nav">
+          <button class="btn-prev" id="btn-prev" onclick="prevQ()" style="visibility:hidden">← Anterior</button>
+          <button class="btn-next" id="btn-next" onclick="nextQ()">Próxima →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW: RESULT -->
+  <div class="view" id="v-result">
+    <div class="result-body">
+      <div class="result-inner">
+        <div id="result-hero" class="result-hero"></div>
+        <div class="detail-card">
+          <div class="clb-title syne" style="margin-bottom:16px">📊 Detalhe por Módulo</div>
+          <div id="result-detail"></div>
+        </div>
+        <div class="tips-card" id="result-tips"></div>
+        <div class="result-btns">
+          <button class="r-btn" onclick="showHome()" style="background:white;color:var(--dark);border:1.5px solid var(--border)">← Voltar</button>
+          <button class="r-btn" onclick="startFull()" style="background:var(--blue-mid);color:white">🔄 Refazer</button>
+          <button class="r-btn" onclick="location.href='courses.html'" style="background:var(--green);color:white">📚 Estudar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end main -->
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+const sb = createClient('https://hswdkvuuwoqvcjfhvhyb.supabase.co','sb_publishable_z7p21rI4XJajkmkm3fMETg_3HUCi4P9')
+
+// Auth
+const { data:{ user } } = await sb.auth.getUser()
+const lok = JSON.parse(localStorage.getItem('fe_onboarding')||'{}').done
+if (!user && !lok) { location.href='../index.html' }
+window._sb = sb; window._user = user
+
+// Profile
+if (user) {
+  const { data:p } = await sb.from('profiles').select('*').eq('id',user.id).single()
+  if (p) {
+    const fn = (p.full_name||user.email||'A').split(' ')[0]
+    document.getElementById('sb-av').textContent   = fn[0].toUpperCase()
+    document.getElementById('sb-name').textContent = p.full_name || fn
+    document.getElementById('sb-level').textContent= `Nível ${p.current_level||'A1'}`
+    const xp = p.xp_total||0, nx = Math.ceil((xp+1)/500)*500
+    document.getElementById('sb-xp').textContent   = xp+' XP'
+    document.getElementById('sb-xp-next').textContent = nx+' XP'
+    document.getElementById('sb-fill').style.width = Math.min(100,Math.round((xp%500)/500*100))+'%'
+    document.getElementById('sb-streak').textContent = (p.streak_current||0)+' dias!'
+  }
+}
+
+// Load all questions from Supabase
+const { data: allQ } = await sb.from('tef_questions').select('*').eq('is_active',true).order('module').order('order_index')
+window._allQ = allQ || []
+
+// Update counts
+const cnt = { oral:0, lecture:0, expression:0, 'oral-expr':0 }
+allQ?.forEach(q => cnt[q.module] = (cnt[q.module]||0)+1)
+document.getElementById('cnt-oral').textContent       = cnt.oral||0
+document.getElementById('cnt-lecture').textContent    = cnt.lecture||0
+document.getElementById('cnt-expression').textContent = cnt.expression||0
+document.getElementById('cnt-oral-expr').textContent  = cnt['oral-expr']||0
+document.getElementById('total-qs').textContent       = allQ?.length || 0
+
+window.doLogout = async () => { await sb.auth.signOut(); location.href='../index.html' }
+</script>
+
+<script>
+// ── STATE ────────────────────────────────────────────────────
+let simQ = [], curIdx = 0, answers = [], timerInt = null, timeLeft = 0
+
+const modConfig = {
+  oral:       { name:'Compréhension Orale',  icon:'👂', color:'var(--blue-mid)',  max:360, time:40*60, tag:'oral',       tagBg:'var(--blue-light)',   tagColor:'var(--blue-mid)'   },
+  lecture:    { name:'Compréhension Écrite', icon:'📖', color:'var(--green)',     max:300, time:60*60, tag:'lecture',    tagBg:'var(--green-light)',  tagColor:'var(--green)'      },
+  expression: { name:'Expression Écrite',    icon:'✍️', color:'var(--gold)',      max:450, time:60*60, tag:'expression', tagBg:'var(--gold-light)',   tagColor:'#92400e'           },
+  'oral-expr':{ name:'Expression Orale',     icon:'🎤', color:'var(--purple)',    max:450, time:15*60, tag:'oral-expr',  tagBg:'var(--purple-light)', tagColor:'var(--purple)'     }
+}
+const letters = ['A','B','C','D']
+const lcColors = ['#2563eb','#16a34a','#f59e0b','#7c3aed']
+
+// ── VIEWS ───────────────────────────────────────────────────
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'))
+  document.getElementById(id).classList.add('active')
+}
+function showHome() {
+  clearInterval(timerInt)
+  document.getElementById('timer').style.display='none'
+  document.getElementById('topbar-h1').textContent='📋 Simulado TEF Canadá'
+  document.getElementById('topbar-p').textContent='Prepare-se para o exame de imigração'
+  showView('v-home')
+}
+
+// ── START ────────────────────────────────────────────────────
+function startFull() {
+  const all = window._allQ || []
+  // 1 of each type from each module
+  simQ = [
+    ...all.filter(q=>q.module==='oral').slice(0,3),
+    ...all.filter(q=>q.module==='lecture').slice(0,3),
+    ...all.filter(q=>q.module==='expression'),
+    ...all.filter(q=>q.module==='oral-expr')
+  ]
+  launch(90*60, 'Simulado Completo — 4 Módulos')
+}
+function startMod(mod) {
+  simQ = (window._allQ||[]).filter(q=>q.module===mod)
+  if (!simQ.length) { alert('Nenhuma questão disponível para este módulo.\nExecute o SQL 05_tef_questions.sql no Supabase primeiro!'); return }
+  const c = modConfig[mod]
+  launch(c.time, c.icon+' '+c.name)
+}
+function launch(secs, label) {
+  if (!simQ.length) { alert('Carregando questões... Aguarde um momento.'); return }
+  curIdx = 0
+  answers = new Array(simQ.length).fill(null)
+  timeLeft = secs
+  document.getElementById('topbar-h1').textContent = '📋 TEF — '+label
+  document.getElementById('topbar-p').textContent  = simQ.length+' questão(ões)'
+  showView('v-sim')
+  startTimer()
+  renderQ()
+}
+
+// ── TIMER ────────────────────────────────────────────────────
+function startTimer() {
+  clearInterval(timerInt)
+  const el = document.getElementById('timer')
+  const txt = document.getElementById('timer-txt')
+  el.style.display='flex'
+  function tick() {
+    const m=Math.floor(timeLeft/60), s=timeLeft%60
+    txt.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
+    el.className='timer-badge'+(timeLeft<300?' urgent':'')
+    if(timeLeft<=0){clearInterval(timerInt);finishSim()}
+    timeLeft--
+  }
+  tick(); timerInt=setInterval(tick,1000)
+}
+
+// ── RENDER QUESTION ──────────────────────────────────────────
+function renderQ() {
+  const q = simQ[curIdx]
+  const c = modConfig[q.module]
+  const pct = Math.round((curIdx/simQ.length)*100)
+  document.getElementById('sim-fill').style.width=pct+'%'
+  document.getElementById('sim-lbl').textContent=`Questão ${curIdx+1} de ${simQ.length}`
+  document.getElementById('sim-mod-lbl').textContent=c.icon+' '+c.name
+  document.getElementById('btn-prev').style.visibility=curIdx>0?'visible':'hidden'
+  const isLast = curIdx===simQ.length-1
+  document.getElementById('btn-next').textContent=isLast?'✓ Terminar':'Próxima →'
+  document.getElementById('btn-next').className='btn-next'+(isLast?' btn-finish':'')
+
+  let html=`<div class="q-wrap">
+    <div class="q-module-tag" style="background:${c.tagBg};color:${c.tagColor}">${c.icon} ${c.name}</div>
+    <div class="q-num">Questão ${curIdx+1}</div>`
+
+  if (q.question_type==='multiple_choice') {
+    if (q.context && q.module==='oral') {
+      html+=`<div class="audio-box">
+        <button class="audio-btn" id="audio-btn-${curIdx}" onclick="speakCurrent()" data-txt="${(q.context||'').replace(/"/g,'&quot;').replace(/\n/g,' ')}">🔊</button>
+        <div class="audio-info"><strong>${q.title||'Áudio'}</strong><span>Clique para ouvir (síntese de voz francesa)</span></div>
+      </div>`
+    }
+    if (q.context && q.module==='lecture') {
+      html+=`<div class="context-box">${(q.context||'').replace(/\n/g,'<br>')}</div>`
+    }
+    html+=`<div class="q-text">${q.question}</div><div class="options">`
+    const opts = q.options||[]
+    opts.forEach((o,i)=>{
+      const sel=answers[curIdx]===i
+      const cls=sel?'opt-btn selected':'opt-btn'
+      html+=`<button class="${cls}" onclick="pick(${i})" ${answers[curIdx]!==null&&!sel?'disabled':''}>
+        <div class="opt-letter" style="background:${lcColors[i]}">${letters[i]}</div>${o.text}
+      </button>`
+    })
+    html+='</div>'
+  }
+  else if (q.question_type==='writing') {
+    const hints = q.hints||[]
+    html+=`<div class="writing-meta">
+      <span class="w-tag" style="background:var(--gold-light);color:#92400e">${q.title||'Tarefa'}</span>
+      <span style="font-size:12px;color:var(--gray)">Mínimo ${q.min_words||80} palavras</span>
+    </div>
+    <div class="q-text">${q.question}</div>
+    <textarea class="w-textarea" id="wt-${curIdx}" placeholder="Escreva sua resposta aqui..." oninput="saveWrite(${curIdx})">${answers[curIdx]||''}</textarea>
+    <div class="w-stats">
+      <span>Palavras: <strong id="wc-${curIdx}" style="color:var(--gray)">0</strong></span>
+      <span>Mínimo: ${q.min_words||80}</span>
+    </div>`
+    if (hints.length) {
+      html+=`<div class="w-hints"><strong>💡 Dicas</strong>${hints.map(h=>`<div class="w-hint">→ ${h}</div>`).join('')}</div>`
+    }
+    setTimeout(()=>countWords(curIdx, q.min_words||80), 50)
+  }
+  else if (q.question_type==='oral') {
+    const hints = q.hints||[]
+    html+=`<div class="q-text">${q.question.replace(/\n/g,'<br>')}</div>
+    <div class="oral-card">
+      <div style="font-size:40px;margin-bottom:8px">🎤</div>
+      <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:700;color:var(--purple);margin-bottom:4px">Pratique em voz alta</div>
+      <div style="font-size:13px;color:var(--purple);opacity:0.8;margin-bottom:14px">Tempo de preparação: ${q.prep_time_sec||60}s</div>
+      <button onclick="location.href='chat.html'" style="background:var(--purple);color:white;border:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer">Praticar com Prof. Claire →</button>
+    </div>`
+    if (hints.length) {
+      html+=`<div class="oral-tips"><strong style="font-size:13px;color:var(--dark);display:block;margin-bottom:10px">💡 Dicas</strong>${hints.map(h=>`<div class="oral-tip">→ <span>${h}</span></div>`).join('')}</div>`
+    }
+    answers[curIdx]='done'
+  }
+
+  html+='</div>'
+  document.getElementById('q-area').innerHTML=html
+  document.querySelector('.sim-body').scrollTo(0,0)
+}
+
+function pick(i) { answers[curIdx]=i; renderQ() }
+function saveWrite(idx) {
+  const el=document.getElementById('wt-'+idx)
+  if(el){ answers[idx]=el.value; countWords(idx, simQ[idx]?.min_words||80) }
+}
+function countWords(idx, min) {
+  const el=document.getElementById('wt-'+idx)
+  const cnt=document.getElementById('wc-'+idx)
+  if(!el||!cnt) return
+  const n=el.value.trim().split(/\s+/).filter(w=>w.length>0).length
+  cnt.textContent=n; cnt.style.color=n>=min?'var(--green)':'var(--red)'
+}
+
+function prevQ() { if(curIdx>0){curIdx--;renderQ()} }
+function nextQ() {
+  if(curIdx<simQ.length-1){curIdx++;renderQ()}
+  else finishSim()
+}
+
+// ── FINISH ───────────────────────────────────────────────────
+function finishSim() {
+  clearInterval(timerInt)
+  document.getElementById('timer').style.display='none'
+
+  // Score calc
+  const byMod={}
+  simQ.forEach((q,i)=>{
+    if(!byMod[q.module]) byMod[q.module]={correct:0,total:0}
+    byMod[q.module].total++
+    if(q.question_type==='multiple_choice'&&answers[i]===q.correct_index) byMod[q.module].correct++
+    else if(q.question_type!=='multiple_choice') byMod[q.module].correct++ // writing/oral gets credit
+  })
+
+  const maxPts={oral:360,lecture:300,expression:450,'oral-expr':450}
+  const minPts={oral:145,lecture:121,expression:181,'oral-expr':181}
+  const clbMap=[
+    {mod:'oral',       thresholds:[[310,'CLB 9'],[280,'CLB 8'],[249,'CLB 7'],[217,'CLB 6'],[181,'CLB 5'],[145,'CLB 4']]},
+    {mod:'lecture',    thresholds:[[258,'CLB 9'],[233,'CLB 8'],[207,'CLB 7'],[181,'CLB 6'],[151,'CLB 5'],[121,'CLB 4']]},
+    {mod:'expression', thresholds:[[388,'CLB 9'],[349,'CLB 8'],[310,'CLB 7'],[271,'CLB 6'],[226,'CLB 5'],[181,'CLB 4']]},
+    {mod:'oral-expr',  thresholds:[[388,'CLB 9'],[349,'CLB 8'],[310,'CLB 7'],[271,'CLB 6'],[226,'CLB 5'],[181,'CLB 4']]}
+  ]
+  function getCLB(mod, score) {
+    const t = clbMap.find(c=>c.mod===mod)?.thresholds||[]
+    for(const [min,clb] of t) if(score>=min) return clb
+    return 'Abaixo CLB 4'
+  }
+
+  const scores={}
+  Object.keys(byMod).forEach(mod=>{
+    const {correct,total}=byMod[mod]
+    const min=minPts[mod]||181, max=maxPts[mod]||360
+    const raw=Math.round(min+(correct/total)*(max-min))
+    scores[mod]={ pts:raw, clb:getCLB(mod,raw), pct:Math.round((raw-min)/(max-min)*100) }
+  })
+
+  const clbNums=Object.values(scores).map(s=>parseInt(s.clb.replace('CLB ','')||'0')||0)
+  const minCLB=clbNums.length?Math.min(...clbNums):0
+  const passed=minCLB>=7
+
+  // Hero
+  document.getElementById('result-hero').innerHTML=`
+    <div class="result-emoji">${passed?'🎉':'💪'}</div>
+    <div class="result-title syne">${passed?'Parabéns! CLB 7+ atingido!':'Continue praticando!'}</div>
+    <div class="result-sub">${passed?'Sua pontuação é suficiente para o Express Entry!':'Você precisa de CLB 7 em todos os módulos.'}</div>
+    <div class="score-grid">
+      ${Object.keys(scores).map(mod=>{
+        const c=modConfig[mod], s=scores[mod]
+        const clbNum=parseInt(s.clb.replace('CLB ','')||'0')||0
+        const clbColor=clbNum>=9?'#f59e0b':clbNum>=7?'#22c55e':'#f87171'
+        return`<div class="score-box">
+          <span class="score-num">${s.pts}</span>
+          <div class="score-lbl">${c.icon} ${c.name.split(' ')[0]}</div>
+          <div class="score-clb" style="color:${clbColor}">${s.clb}</div>
+        </div>`
+      }).join('')}
+    </div>`
+
+  // Detail
+  document.getElementById('result-detail').innerHTML=Object.keys(scores).map(mod=>{
+    const c=modConfig[mod], s=scores[mod]
+    const clbNum=parseInt(s.clb.replace('CLB ','')||'0')||0
+    const fillColor=clbNum>=7?c.color:'var(--red)'
+    const badgeBg=clbNum>=9?'var(--gold-light)':clbNum>=7?'var(--green-light)':'var(--red-light)'
+    const badgeFg=clbNum>=9?'#92400e':clbNum>=7?'var(--green)':'var(--red)'
+    return`<div class="detail-row">
+      <div class="detail-name">${c.icon} ${c.name}</div>
+      <div class="detail-bar"><div class="detail-fill" style="width:${s.pct}%;background:${fillColor}"></div></div>
+      <div class="detail-score" style="color:${fillColor}">${s.pts} pts</div>
+      <span class="badge" style="background:${badgeBg};color:${badgeFg};min-width:60px;text-align:center">${s.clb}</span>
+    </div>`
+  }).join('')
+
+  // Tips
+  const tips=passed
+    ?['🎯 Mantenha sua prática diária — o exame real é mais longo','📚 Leia artigos canadenses para ampliar vocabulário','🎧 Ouça Radio-Canada para se acostumar com o sotaque québécois']
+    :['📖 Leia 30 minutos por dia em francês para melhorar a compreensão','🎤 Pratique a expressão oral com a Prof. Claire no Chat IA','👂 Ouça podcasts em francês: RFI, France Culture, Radio-Canada']
+  document.getElementById('result-tips').innerHTML=`
+    <h3>💡 Suas recomendações</h3>
+    ${tips.map(t=>`<div class="tip-row">→ <span>${t}</span></div>`).join('')}`
+
+  document.getElementById('topbar-h1').textContent='📊 Resultados do Simulado'
+  document.getElementById('topbar-p').textContent='Análise completa da sua performance'
+  showView('v-result')
+}
+
+// ── AUDIO ────────────────────────────────────────────────────
+function speakCurrent() {
+  const btn = document.querySelector('.audio-btn')
+  if (!btn) return
+  const txt = btn.getAttribute('data-txt')
+  if (!txt) return
+  speak(txt, btn)
+}
+
+function speak(txt, btn) {
+  if (!('speechSynthesis' in window)) {
+    alert('Seu navegador não suporta síntese de voz. Use Chrome ou Edge.')
+    return
+  }
+  speechSynthesis.cancel()
+
+  // Indicateur visuel
+  if (btn) { btn.textContent = '⏸️'; btn.disabled = true }
+
+  const u = new SpeechSynthesisUtterance(txt)
+  u.lang = 'fr-FR'
+  u.rate = 0.82
+  u.pitch = 1
+
+  // Chercher une voix française
+  function trySpeak() {
+    const voices = speechSynthesis.getVoices()
+    const frVoice = voices.find(v => v.lang.startsWith('fr'))
+    if (frVoice) u.voice = frVoice
+
+    u.onend = () => { if (btn) { btn.textContent = '🔊'; btn.disabled = false } }
+    u.onerror = () => { if (btn) { btn.textContent = '🔊'; btn.disabled = false } }
+    speechSynthesis.speak(u)
+  }
+
+  // Les voix peuvent ne pas être chargées immédiatement
+  if (speechSynthesis.getVoices().length === 0) {
+    speechSynthesis.onvoiceschanged = trySpeak
+  } else {
+    trySpeak()
+  }
+}
+
+// Global
+window.startFull=startFull; window.startMod=startMod
+window.showHome=showHome; window.pick=pick
+window.saveWrite=saveWrite; window.nextQ=nextQ; window.prevQ=prevQ
+</script>
+</body>
+</html>
